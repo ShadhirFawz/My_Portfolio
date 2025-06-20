@@ -1,7 +1,5 @@
-import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
-import { FiMenu, FiX } from "react-icons/fi";
-import ProfileImg from "../assets/images/fulldp.png";
+import { motion, useReducedMotion } from "framer-motion";
+import { useRef, useState, useMemo, useEffect } from "react";
 import { FaLinkedin, FaGithub, FaEnvelope } from "react-icons/fa";
 import Github from "../assets/images/github-logo.png";
 import Gmail from "../assets/images/gmail-logo.png";
@@ -9,67 +7,94 @@ import LinkedIn from "../assets/images/linkedin-logo.png";
 import { ComplexNavbar } from "../components/Navbar";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Sidebar from "../components/Sidebar";
-import ContactForm from "../components/ContactForm";
 import { useNavigate } from "react-router-dom";
-
+import AnimatedSquares from "../components/SquareWheel";
+import RotatingCard from "../components/RotatingCard";
+import FloatingCodeSnippets from "../components/FloatingCodeSnippets";
+import GlitchText from "../components/GlitchText";
+import TechStackScroll from "../components/TechStackScroll";
 
 const LandingPage = () => {
   const navigate = useNavigate();
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const shouldReduceMotion = useReducedMotion();
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [hovered, setHovered] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
   const [clickedIndex, setClickedIndex] = useState(null);
   const [showText, setShowText] = useState(false);
+  const pageRef = useRef(null);
+  const [pageHeight, setPageHeight] = useState(0);
+  const [trailPoints, setTrailPoints] = useState([]);
+  const [isMoving, setIsMoving] = useState(false);
 
   useEffect(() => {
+    let rafId;
+    let stopTimeout;
+
     const handleMouseMove = (e) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-      setShowText(true);
+      if (!shouldReduceMotion) {
+        if (!isMoving) {
+          setTrailPoints([]); // Reset trail on new move
+        }
+        setIsMoving(true);
+        const now = Date.now();
+        const newPoint = {
+          id: now + Math.random(),
+          x: e.clientX,
+          y: e.clientY,
+          timestamp: now,
+        };
+        setTrailPoints((prev) => {
+          const updated = [...prev, newPoint].slice(-20); // Limit to 20 points
+          return updated;
+        });
+        setMousePosition({ x: e.clientX, y: e.clientY });
+
+        clearTimeout(stopTimeout);
+        stopTimeout = setTimeout(() => {
+          setIsMoving(false);
+          setTrailPoints((prev) => prev.map((p) => ({ ...p, fading: true })));
+          setTimeout(() => setTrailPoints([]), 300); // Clear after fade
+        }, 100);
+      }
     };
-  
+
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
+      setPageHeight(pageRef.current?.clientHeight || window.innerHeight);
     };
-  
+
     window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("resize", handleResize);
-  
+
     if (isDrawerOpen) {
-      document.body.style.overflow = "hidden"; // Disable scrolling
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = "auto"; // Enable scrolling back
+      document.body.style.overflow = "auto";
     }
-  
-    // Automatic animation loop for lines & text
+
     let timeout1, timeout2;
-    const animateLines = () => {
-      setMousePosition({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
-  
-      // After lines stop moving, reveal text
+    const animateText = () => {
+      setShowText(true);
       timeout1 = setTimeout(() => {
-        setShowText(true);
-  
-        // Hide text after a delay, then restart the loop
-        timeout2 = setTimeout(() => {
-          setShowText(false);
-          animateLines(); // Restart animation
-        }, 2000); // Text stays visible for 2 seconds
-      }, 1500); // Wait 1s after the lines stop before showing text
+        setShowText(false);
+        timeout2 = setTimeout(animateText, 1500);
+      }, 2000);
     };
-  
-    animateLines(); // Start animation loop
-  
-    // Cleanup
+    animateText();
+
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("resize", handleResize);
-      document.body.style.overflow = "auto"; // Reset scrolling
+      document.body.style.overflow = "auto";
       clearTimeout(timeout1);
       clearTimeout(timeout2);
+      clearTimeout(stopTimeout);
+      cancelAnimationFrame(rafId);
     };
-  }, [isDrawerOpen]); // Added showText as a dependency
+  }, [isDrawerOpen, shouldReduceMotion]);
 
   const handleClick = (e, index, link) => {
     e.preventDefault(); // Prevent instant navigation
@@ -83,7 +108,7 @@ const LandingPage = () => {
 
   return (
     <div
-      className={`relative flex flex-col items-center justify-center w-full min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 overflow-hidden p-6 pt-[100px] 
+      className={`relative flex flex-col items-center justify-center w-full min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 p-6 pt-[100px] 
         ${isDrawerOpen ? "pointer-events-none" : ""}`} // ⬅️ Disables all interactions when drawer is open
     >
       <Sidebar />
@@ -92,24 +117,24 @@ const LandingPage = () => {
         <div className="relative flex items-center">
           <div className="relative overflow-hidden">
             <h1
-              className="text-white text-2xl font-bold font-serif cursor-none relative mt-2 md:mt-0"
+              className="text-white text-2xl font-bold font-serif cursor-auto relative mt-2 md:mt-0"
               onMouseEnter={() => setHovered(true)}
               onMouseLeave={() => setHovered(false)}
               style={{ fontFamily: "cursive" }}
             >
-              Shad_
+              ShaD_
             </h1>
             <motion.div
               className="absolute left-0 bottom-0 h-[2px] bg-blue-400"
               initial={{ width: 0 }}
-              animate={hovered ? { width: "60px" } : { width: 0 }}
+              animate={hovered && !shouldReduceMotion ? { width: "60px" } : { width: 0 }}
               transition={{ duration: 1 }}
             />
           </div>
           <motion.span
             className="text-blue-400 text-2xl font-bold ml-2 font-cursive overflow-hidden relative"
             initial={{ width: 0 }}
-            animate={hovered ? { width: "auto" } : { width: 0 }}
+            animate={hovered && !shouldReduceMotion ? { width: "auto" } : { width: 0 }}
             transition={{ duration: 1, delay: 0.2 }}
             style={{
               fontFamily: "serif",
@@ -147,7 +172,7 @@ const LandingPage = () => {
       {isMobile && isDrawerOpen && (
         <motion.div
           initial={{ x: -150 }}
-          animate={{ x: 0 }}
+          animate={shouldReduceMotion ? { x: 0 } : { x: 0 }}
           exit={{ x: -50 }}
           className="absolute top-0 left-0 w-2/4 h-screen bg-black bg-opacity-90 p-6 flex flex-col items-start z-40 space-y-4 pointer-events-auto"
         >
@@ -165,7 +190,7 @@ const LandingPage = () => {
                 <motion.div
                   className="absolute left-0 top-0 h-full bg-blue-500 opacity-20 border rounded-l-xl"
                   initial={{ width: "0%" }}
-                  animate={clickedIndex === index ? { width: "100%" } : {}}
+                  animate={clickedIndex === index && !shouldReduceMotion ? { width: "100%" } : {}}
                   transition={{ duration: 0.5, ease: "easeInOut" }}
                 />
                 <span className="relative z-10 text-amber-50 font-serif">{text}</span>
@@ -187,7 +212,8 @@ const LandingPage = () => {
           </div>
         </motion.div>
       )}
-      
+        <FloatingCodeSnippets />
+        <TechStackScroll pageHeight={pageHeight} />
       {/* Background effect */}
       <motion.div
         className="absolute inset-0 pointer-events-none"
@@ -196,11 +222,43 @@ const LandingPage = () => {
         }}
         transition={{ duration: 0.3 }}
       />
+      <motion.svg
+        className="absolute inset-0 pointer-events-none"
+        style={{ width: '100%', height: '100%' }}
+        initial={{ opacity: 1 }}
+        animate={{ opacity: isMoving ? 1 : 0 }}
+        transition={{ duration: 0.3, ease: 'easeOut' }}
+      >
+        <defs>
+          <linearGradient id="swordGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style={{ stopColor: 'rgba(0, 150, 255, 0.8)', stopOpacity: 1 }} />
+            <stop offset="100%" style={{ stopColor: 'rgba(0, 150, 255, 0.2)', stopOpacity: 0.2 }} />
+          </linearGradient>
+        </defs>
+        <motion.path
+          d={trailPoints.length > 1 ? `M ${trailPoints[0].x},${trailPoints[0].y} ${trailPoints.slice(1).map((p) => `L ${p.x},${p.y}`).join(' ')}` : ''}
+          stroke="url(#swordGradient)"
+          strokeWidth={trailPoints.length > 1 ? `10 ${trailPoints.slice(1).map((_, i) => Math.max(10 - (i + 1) * (8 / (trailPoints.length - 1)), 2)).join(' ')}` : '10'}
+          fill="none"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          initial={{ pathLength: 1, strokeDashoffset: 0 }}
+          animate={{ pathLength: isMoving ? 1 : 0, strokeDashoffset: isMoving ? 0 : 1 }}
+          transition={{ duration: 0.3, ease: 'easeOut' }}
+        />
+        <circle
+          cx={trailPoints.length > 0 ? trailPoints[0].x : 0}
+          cy={trailPoints.length > 0 ? trailPoints[0].y : 0}
+          r="5"
+          fill="rgba(0, 150, 255, 0.8)"
+        />
+      </motion.svg>
       
       {/* Content Container */}
       <div
         className="relative z-10 flex flex-col md:flex-row items-center justify-center w-full max-w-screen-6xl px-6 md:px-32 text-center md:text-left min-h-[80vh] md:min-h-[70vh]"
       >
+        <style>{`.max-h-96::-webkit-scrollbar { display: none; }`}</style>
         <div className="w-full md:w-1/2 space-y-10 flex flex-col items-center md:items-start">
           <motion.h1
             className="text-5xl md:text-6xl font-extrabold text-gray-100"
@@ -209,47 +267,17 @@ const LandingPage = () => {
             transition={{ duration: 0.6 }}
             style={{ fontFamily: "serif" }}
           >
-            Hello, I'm <span className="text-blue-400">Shadhir</span>
+            Hello, I'm <GlitchText text="Shadhir" className="text-blue-400 inline" />
           </motion.h1>
 
           {/* Lines Below Hello */}
           <div className="relative w-full flex flex-col items-start mt-[-20px] space-y-1">
-            {/* First Line */}
-            <motion.div
-              className="h-[5px] bg-white rounded-l-full"
-              initial={{ width: 0 }}
-              animate={{ width: "40%" }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                repeatType: "reverse",
-                ease: "easeInOut",
-                delay: 0.2
-              }}
-              onAnimationComplete={() => setShowText(true)} // Trigger text reveal
-            />
-
-            {/* Second Line */}
-            <motion.div
-              className="h-[5px] bg-blue-600 rounded-l-full"
-              style={{ marginTop: "4px", marginLeft: "40px" }}
-              initial={{ width: 0 }}
-              animate={{ width: "calc(40% - 40px)" }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                repeatType: "reverse",
-                ease: "easeInOut",
-                delay: 0.2
-              }}
-            />
-
             {/* Revealing Text */}
             <motion.span
               className="text-blue-400 text-2xl font-bold font-cursive overflow-hidden"
               initial={{ width: 0 }}
-              animate={showText ? { width: "auto" } : { width: 0 }}
-              transition={{ duration: 1, delay: 0.1 }}
+              animate={showText && !shouldReduceMotion ? { width: "auto" } : { width: 0 }}
+              transition={{ duration: 1.5, delay: 0.1 }}
               style={{
                 fontFamily: "cursive",
                 fontSize: 32,
@@ -259,30 +287,38 @@ const LandingPage = () => {
               }}
             >
               Full-Stack Developer <span className="text-white">❰ / ❱</span>
-            </motion.span>           
+            </motion.span>         
           </div>
+
+          <AnimatedSquares />
 
           {/* Animated Infinite Gradient Underline */}
           <motion.div
-            className="relative mt-[-20px] h-2 w-full max-w-[250px] md:max-w-[350px] rounded-full overflow-hidden"
+            className="relative mt-[-30px] h-2 w-full max-w-[250px] md:max-w-[350px] rounded-full overflow-hidden brightness-85"
           >
             <motion.div
               className="absolute inset-0 w-full h-full"
               style={{
-                background:
-                  "linear-gradient(90deg, #EE696B, #C35D8A, #90559F, #6C4C99, #523A78, #EE696B)",
-                backgroundSize: "300% 250%",
-                filter: "brightness(1.2) blur(1px)",
+                background: "linear-gradient(90deg, #EE696B, #C35D8A, #90559F, #6C4C99, #523A78, #EE696B)",
+                backgroundSize: "1000% 100%", // Much longer gradient for ultra-smoothness
               }}
-              animate={{ backgroundPositionX: ["0%", "100%"] }}
-              transition={{ repeat: Infinity, duration: 6, ease: "linear" }}
+              animate={
+                shouldReduceMotion
+                  ? { backgroundPositionX: "0%" }
+                  : { backgroundPositionX: ["0%", "1000%"] }
+              }
+              transition={{ 
+                repeat: Infinity,
+                duration: 80, // Slower movement (30 seconds per loop)
+                ease: "linear",
+              }}
             />
           </motion.div>
 
           <motion.p
             className="text-lg text-gray-300 font-light leading-relaxed px-4 md:px-0"
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1 }}
             transition={{ duration: 1, delay: 0.3 }}
           >
             Hi there! I'm a Full-Stack Developer who transforms ideas into dynamic web experiences.
@@ -303,8 +339,9 @@ const LandingPage = () => {
             >
               <motion.button
                 className="relative z-10 px-8 py-4 text-lg font-medium bg-blue-600 rounded-lg shadow-md border border-blue-50 text-gray-100 transition-all duration-300 flex items-center"
-                animate={showMessage ? { x: -40 } : { x: 0 }}
+                animate={showMessage && !shouldReduceMotion ? { x: -40 } : { x: 0 }}
                 transition={{ duration: 0.3 }}
+                style={{fontFamily: "sans-serif"}}
               >
                 Let's Connect
               </motion.button>
@@ -313,7 +350,11 @@ const LandingPage = () => {
                 <motion.button
                   className="flex items-center justify-center w-11 h-11 text-blue-600 rounded-t-md rounded-e-none rounded-b-md shadow-lg flex-none"
                   initial={{ opacity: 0, x: -40 }}
-                  animate={showMessage ? { opacity: 1, x: 0 } : { opacity: 0, x: -40 }}
+                  animate={
+                    showMessage && !shouldReduceMotion
+                      ? { opacity: 1, x: 0 }
+                      : { opacity: 0, x: -40 }
+                  }
                   transition={{ duration: 0.3 }}
                   style={{ backgroundColor: "#262626" }}
                   onClick={() => navigate("/contact")}
@@ -329,17 +370,29 @@ const LandingPage = () => {
                 href="https://www.linkedin.com/in/shadhir-fawz-30739730a/"
                 target="_blank"
                 rel="noopener noreferrer"
-                whileHover={{ scale: 1.1 }}
-                animate={{ y: [0, -8, 0] }}
-                transition={{ repeat: Infinity, duration: 5 }}
+                whileHover={shouldReduceMotion ? {} : { scale: 1.1 }}
+                animate={
+                  shouldReduceMotion ? {} : { y: [0, -8, 0] }
+                }
+                transition={
+                  shouldReduceMotion
+                    ? {}
+                    : { repeat: Infinity, duration: 5 }
+                }
               >
                 <img src={LinkedIn} className="w-12 cursor-pointer" />
               </motion.a>
               <motion.a
                 href="mailto:ShadhirFawz19@gmail.com"
-                whileHover={{ scale: 1.1 }}
-                animate={{ y: [0, -8, 0] }}
-                transition={{ repeat: Infinity, duration: 5 }}
+                whileHover={shouldReduceMotion ? {} : { scale: 1.1 }}
+                animate={
+                  shouldReduceMotion ? {} : { y: [0, -8, 0] }
+                }
+                transition={
+                  shouldReduceMotion
+                    ? {}
+                    : { repeat: Infinity, duration: 5 }
+                }
               >
                 <img src={Gmail} className="w-12 cursor-pointer" />
               </motion.a>
@@ -347,9 +400,15 @@ const LandingPage = () => {
                 href="https://github.com/ShadhirFawz"
                 target="_blank"
                 rel="noopener noreferrer"
-                whileHover={{ scale: 1.1 }}
-                animate={{ y: [0, -8, 0] }}
-                transition={{ repeat: Infinity, duration: 5 }}
+                whileHover={shouldReduceMotion ? {} : { scale: 1.1 }}
+                animate={
+                  shouldReduceMotion ? {} : { y: [0, -8, 0] }
+                }
+                transition={
+                  shouldReduceMotion
+                    ? {}
+                    : { repeat: Infinity, duration: 5 }
+                }
               >
                 <img src={Github} className="w-12 cursor-pointer" />
               </motion.a>
@@ -357,12 +416,18 @@ const LandingPage = () => {
           </div>
         </div>
 
-        {/* Profile Image (Hidden on Mobile) */}
-        <motion.div className="hidden md:block relative w-110 h-120 mx-auto md:mx-44 border border-gray-900 rounded-3xl overflow-hidden">
-        <img src={ProfileImg} alt="Profile" className="w-full h-full object-cover" />
-          <div className="absolute inset-x-0 top-0 h-4/4 bg-gradient-to-t to-transparent from-gray-400 opacity-90 mix-blend-overlay"></div>
-          <div className="absolute inset-y-0 left-0 w-2/4 bg-gradient-to-l to-transparent from-gray-600 opacity-150 mix-blend-overlay"></div>
-          <div className="absolute inset-y-0 right-0 w-2/4 bg-gradient-to-r to-transparent from-gray-600 opacity-150 mix-blend-overlay"></div>
+        <motion.div 
+          className="w-3/4 h-full md:w-1/2 flex justify-center mt-70 md:mt-0 overflow-visible"
+          initial={{ x: "100%", opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ 
+            type: "spring",
+            stiffness: 50,
+            damping: 10,
+            delay: 0.5 // Optional delay to coordinate with other animations
+          }}
+        >
+          <RotatingCard />
         </motion.div>
       </div>
     </div>

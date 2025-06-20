@@ -23,7 +23,7 @@ const Sidebar = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  if (isMobile) return null; // Hide sidebar on mobile
+  if (isMobile) return null;
 
   return (
     <div
@@ -32,12 +32,12 @@ const Sidebar = () => {
       onMouseLeave={() => setIsSidebarOpen(false)}
     >
       {/* Border Animation */}
-      <svg className="absolute top-1/4 right-5 w-20 h-80" viewBox="0 0 100 400">
+      <svg className="absolute top-1/4 right-5 w-20 h-80" viewBox="0 0 98 400">
       <motion.rect
-        x="5"
+        x="6"
         y="5"
-        width="90"
-        height="390"
+        width="85"
+        height="395"
         rx="50"
         ry="50"
         fill="none"
@@ -46,7 +46,7 @@ const Sidebar = () => {
         strokeDasharray="1000"
         initial={{ strokeDashoffset: 1000 }}
         animate={{
-          strokeDashoffset: isHovered || isSidebarOpen ? 0 : 1000, // ✅ Only animates when sidebar is open or hovered
+          strokeDashoffset: isHovered || isSidebarOpen ? 0 : 1000,
         }}
         transition={{
           duration: 1, 
@@ -57,8 +57,8 @@ const Sidebar = () => {
 
       {/* Sidebar Panel */}
       <motion.div
-        initial={{ x: "100%" }} // Starts off-screen on the right
-        animate={{ x: isSidebarOpen ? "0%" : "100%" }} // Slides in when hovered
+        initial={{ x: "100%" }}
+        animate={{ x: isSidebarOpen ? "0%" : "100%" }}
         transition={{ type: "spring", stiffness: 120 }}
         className="fixed top-1/4 right-5 h-80 w-18 bg-gray-900 rounded-full flex flex-col items-center justify-center space-y-8 shadow-lg border-1 border-b-blue-200"
       >
@@ -74,27 +74,29 @@ const Sidebar = () => {
           <div className="w-1 h-1 bg-white rounded-full opacity-90"></div>
         </div>
 
-        {/* Animated Tech Icon */}
+        {/* Animated Tech Icon - Updated with /tech logic */}
         <a
-          href="#tech"
-          className="text-white text-3xl hover:text-blue-400 transition flex items-center justify-center"
+          href={location.pathname === "/tech" ? "#" : "/tech"}
+          className={`text-white text-3xl transition ${location.pathname === "/tech" ? "opacity-50 cursor-default pointer-events-none" : "hover:text-blue-400"}`}
           onMouseEnter={() => {
-            if (!hasAnimated) {
-              setShowCodeIcon(false); // Hide FaCode
-              setAnimateBrackets(true); // Show < > brackets
-              setHasAnimated(true); // Mark animation as played
+            if (!hasAnimated && location.pathname !== "/tech") {
+              setShowCodeIcon(false);
+              setAnimateBrackets(true);
+              setHasAnimated(true);
 
               setTimeout(() => {
-                setShowCodeIcon(true); // Bring back FaCode after animation
-                setAnimateBrackets(false); // Reset brackets animation
-              }, 500); // Run animation only once per hover
+                setShowCodeIcon(true);
+                setAnimateBrackets(false);
+              }, 500);
             }
           }}
           onMouseLeave={() => {
-            setHasAnimated(false); // Reset flag so it plays again next time
+            setHasAnimated(false);
           }}
         >
-          {animateBrackets ? (
+          {location.pathname === "/tech" ? (
+            <FaCode className="w-8 h-8 text-fuchsia-300 opacity-50" />
+          ) : animateBrackets ? (
             <motion.div className="flex items-center">
               <motion.span
                 className="mr-2"
@@ -118,14 +120,13 @@ const Sidebar = () => {
           )}
         </a>
 
-        {/* Another Separator Dot */}
         <div className="flex justify-center items-center">
           <div className="w-1 h-1 bg-white rounded-full opacity-90"></div>
         </div>
 
-        {/* Envelope Icon Changing on Hover */}
+        {/* Envelope Icon (unchanged) */}
         <a
-          href={location.pathname === "/contact" ? "#" : "/contact"} // ✅ Disable when already on /contact
+          href={location.pathname === "/contact" ? "#" : "/contact"}
           className={`text-white text-3xl transition ${location.pathname === "/contact" ? "opacity-50 cursor-default pointer-events-none" : "hover:text-blue-400"}`} 
           onMouseEnter={() => location.pathname !== "/contact" && setIsEnvelopeHovered(true)}
           onMouseLeave={() => location.pathname !== "/contact" && setIsEnvelopeHovered(false)}
@@ -140,6 +141,5 @@ const Sidebar = () => {
     </div>
   );
 };
-
 
 export default Sidebar;

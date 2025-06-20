@@ -10,24 +10,27 @@ const ContactForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            const response = await fetch("http://localhost:5000/send-email", {
+            try {
+                const response = await fetch("http://localhost:5000/send-email", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData),
-            });
+                });
 
-            const data = await response.json();
-            if (response.ok) {
+                const data = await response.json();
+                
+                if (!response.ok) {
+                throw new Error(data.error || "Failed to send message");
+                }
+                
                 setResponseMessage("Message sent successfully!");
                 setFormData({ subject: "", email: "", message: "" });
-            } else {
-                setResponseMessage(data.error);
+                
+            } catch (error) {
+                console.error("Detailed error:", error);
+                setResponseMessage(error.message || "Error sending message. Try again later.");
             }
-        } catch (error) {
-            setResponseMessage("Error sending message. Try again later.");
-        }
-    };
+        };
 
     return (
         <form onSubmit={handleSubmit} className="flex flex-col space-y-4 bg-gray-800 p-6 rounded-lg">
