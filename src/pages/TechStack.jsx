@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import JetpackCompose from "../assets/images/jetpack-compose.png";
+import JetpackCompose from '../assets/images/jetpack-compose.png';
 import Sidebar from "../components/Sidebar";
 import { ComplexNavbar } from "../components/Navbar";
 import ResumePDF from "../Shadhir_Resume.pdf";

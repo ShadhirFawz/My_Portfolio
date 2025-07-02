@@ -21,7 +21,7 @@ import {
 import { GrHome } from "react-icons/gr";
 import FuilioImg from "../assets/images/FuilioImg.jpg";
 import CSpace from "../assets/images/CSpaceImg.jpg"
-import PharmacyImg from "../assets/images/PharmacyImg.png";
+import PharmacyImg from '../assets/images/PharmacyImg.png';
 import { motion } from "framer-motion";
 
 // Status-based color mapping

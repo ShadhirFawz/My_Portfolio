@@ -1,9 +1,9 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { useRef, useState, useMemo, useEffect } from "react";
 import { FaLinkedin, FaGithub, FaEnvelope } from "react-icons/fa";
-import Github from "../assets/images/github-logo.png";
-import Gmail from "../assets/images/gmail-logo.png";
-import LinkedIn from "../assets/images/linkedin-logo.png";
+import Github from '../assets/images/github-logo.png';
+import Gmail from '../assets/images/gmail-logo.png';
+import LinkedIn from '../assets/images/linkedin-logo.png';
 import { ComplexNavbar } from "../components/Navbar";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Sidebar from "../components/Sidebar";

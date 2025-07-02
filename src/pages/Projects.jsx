@@ -3,9 +3,9 @@ import { useState, useEffect } from "react";
 import { ComplexNavbar } from "../components/Navbar";
 import FuilioImg from "../assets/images/FuilioImg.jpg";
 import CSpace from "../assets/images/CSpaceImg.jpg";
-import SaloonImg from "../assets/images/SaloonImg.png";
-import PharmacyImg from "../assets/images/PharmacyImg.png";
-import EcosphereImg from "../assets/images/ecosphere1.png";
+import SaloonImg from '../assets/images/SaloonImg.png';
+import PharmacyImg from '../assets/images/PharmacyImg.png';
+import EcosphereImg from '../assets/images/ecosphere1.png';
 import Sidebar from "../components/Sidebar";
 
 const Projects = () => {

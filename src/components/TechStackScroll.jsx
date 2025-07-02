@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import JetpackCompose from "../assets/images/jetpack-compose.png"
+import JetpackCompose from '../assets/images/jetpack-compose.png';
 
 // Tech stack icons (unchanged)
 const techStack = [
