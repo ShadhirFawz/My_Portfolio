@@ -8,6 +8,7 @@ import PhoneRevealButton from "../components/PhoneButton";
 import ContactGIF from "../assets/images/gifgittest.gif";
 import { ComplexNavbar } from "../components/Navbar";
 import { FaGithub, FaLinkedin, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
+import { GrMail } from "react-icons/gr";
 
 const ContactForm = () => {
   const [formData, setFormData] = useState({
@@ -33,17 +34,18 @@ const ContactForm = () => {
   const [isMoving, setIsMoving] = useState(false);
   const shouldReduceMotion = useReducedMotion();
 
-  // Track screen resize for full-screen layout
   useEffect(() => {
-    const updateScreenSize = () => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
       setScreenSize({ width: window.innerWidth, height: window.innerHeight });
     };
-    window.addEventListener("resize", updateScreenSize);
-    return () => window.removeEventListener("resize", updateScreenSize);
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   useEffect(() => {
-    // Apply styles to body element
     document.body.style.margin = '0';
     document.body.style.padding = '0';
     document.body.style.overflow = 'hidden';
@@ -65,7 +67,6 @@ const ContactForm = () => {
     return () => body.classList.remove("drawer-open");
   }, [isDrawerOpen]);
 
-  // Track mouse movement for background effect
   useEffect(() => {
     let rafId;
     let stopTimeout;
@@ -105,14 +106,6 @@ const ContactForm = () => {
       cancelAnimationFrame(rafId);
     };
   }, [shouldReduceMotion]);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -161,6 +154,34 @@ const ContactForm = () => {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.6, delay: 0.6, ease: "easeOut" } },
   };
+
+  if (isMobile) {
+    return (
+      <div className="fixed inset-0 overflow-y-auto">
+        <div 
+          className="fixed inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-800 p-4 md:p-6"
+        >
+          <motion.div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: `radial-gradient(circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(50, 150, 255, 0.2), rgba(0, 0, 0, 0.7))`,
+            }}
+            transition={{ duration: 0.3 }}
+          />
+          <div className="md:hidden flex items-center justify-center h-full z-500">
+            <div className="bg-gray-800 rounded-lg p-6 text-center">
+              <h2 className="text-xl font-bold text-white mb-2" style={{ fontFamily: "'Times New Roman', serif" }}>
+                Mobile Version Coming Soon
+              </h2>
+              <p className="text-gray-300 text-sm" style={{ fontFamily: "sans-serif" }}>
+                This page is currently available only on desktop.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -305,340 +326,218 @@ const ContactForm = () => {
 
       {/* Main Content Container - Now positioned below navbar */}
       <div className="w-full h-full flex items-center justify-center" style={{ marginTop: isMobile ? '0' : '80px' }}>
-        {isMobile ? (
-          <motion.div
-            className="w-[95%] max-w-sm mx-2 h-auto p-3 bg-gray-800 rounded-lg shadow-md z-10 flex flex-col space-y-2"
-            variants={formVariants}
-            initial="hidden"
-            animate={shouldReduceMotion ? { opacity: 1, y: 0 } : "visible"}
-          >
-            <div className="form-container flex flex-col space-y-4">
-              <h3 
-                className="text-amber-50 text-center text-sm flex items-center justify-center space-x-2"
-                style={{ fontFamily: "Poppins", fontSize: 20 }}
+        <motion.div
+          className="flex items-center justify-center"
+          variants={formVariants}
+          initial="hidden"
+          animate={shouldReduceMotion ? { opacity: 1, y: 0 } : "visible"}
+        >
+          {/* Contact Form */}
+          <div className="w-[600px] h-[560px] p-6 bg-gray-800 rounded-2xl shadow-2xl z-10">
+            <h3 className="text-amber-50 text-center mb-3 flex items-center" style={{ fontFamily: "Poppins", fontSize: 23 }}>
+              <GrMail className="w-8 h-8 mr-2 text-center" />
+              Contact Forum
+            </h3>
+            <form onSubmit={handleSubmit} className="flex flex-col space-y-7">
+              <h2 className="font-normal text-cyan-100 mb-1" style={{ fontFamily: "sans-serif" }}>
+                Choose your concern
+              </h2>
+              <select
+                name="subject"
+                value={formData.subject}
+                onChange={handleChange}
+                className="w-full p-2 rounded bg-gray-700 text-white outline-none focus:ring-0 focus:ring-gray-900"
+                style={{ appearance: "none", fontFamily: "serif" }}
+                required
               >
-                <img 
-                  src={ContactGIF} 
-                  alt="Contact GIF" 
-                  className="w-10 h-10"
-                />
-                <span>Contact Forum</span>
-              </h3>
-              <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
-                <h3 className="font-normal text-cyan-100" style={{ fontFamily: "sans-serif" }}>
-                  Choose your concern
-                </h3>
-                <select
-                  name="subject"
-                  value={formData.subject}
-                  onChange={handleChange}
-                  className="w-full p-2 rounded bg-gray-700 text-white outline-none focus:ring-0 focus:ring-gray-900"
-                  style={{ appearance: "none", fontFamily: "serif" }}
-                  required
-                >
-                  <option value="">Select a subject</option>
-                  <option value="Project Inquiry">Project Inquiry</option>
-                  <option value="Job Opportunity">Job Opportunity</option>
-                  <option value="Technical Support">Technical Support</option>
-                  <option value="General Inquiry">General Inquiry</option>
-                  <option value="Collaboration Request">Collaboration Request</option>
-                  <option value="Feedback">Feedback</option>
-                  <option value="Other">Other</option>
-                </select>
-                <h3 className="font-normal text-cyan-100" style={{ fontFamily: "sans-serif" }}>
-                  Your Email
-                </h3>
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Your Email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="w-full p-2 rounded bg-gray-700 text-white outline-none focus:ring-2 focus:ring-blue-950"
-                  style={{ textTransform: "capitalize" }}
-                  required
-                />
-                <h3 className="font-normal text-cyan-100" style={{ fontFamily: "sans-serif" }}>
-                  Let me know your concern in brief
-                </h3>
-                <div
-                  id="messageBox"
-                  contentEditable
-                  className="w-full p-2 rounded bg-gray-700 text-white outline-none focus:ring-2 focus:ring-blue-950"
-                  style={{ minHeight: '150px', whiteSpace: 'pre-wrap', wordWrap: 'break-word', textTransform: "capitalize" }}
-                  onInput={(e) => setFormData({ ...formData, message: e.target.textContent })}
-                />
-                <div className="flex items-center gap-4"> {/* New container */}
-                  <button
-                    type="submit"
-                    className="w-45 p-5 bg-blue-500 hover:bg-blue-600 rounded text-white transition duration-300 flex justify-center items-center space-x-2"
-                    disabled={loading}
-                    style={{ fontFamily: "sans-serif" }}
-                  >
-                    {loading ? (
-                      <motion.div className="flex space-x-1">
-                        {/* Loading dots remain the same */}
-                      </motion.div>
-                    ) : (
-                      <h4>
-                        <HiPaperAirplane className="w-5 h-5 inline-block -mt-1.5 mr-1" style={{ transform: "rotate(40deg)" }} />
-                        Send Message
-                      </h4>
-                    )}
-                  </button>
-                  
-                  {/* Success indicator */}
-                  {success && (
-                    <motion.div
-                      initial={{ scale: 0, opacity: 0 }}
-                      animate={{ scale: 1.3, opacity: 1 }}
-                      transition={{ type: "spring", stiffness: 200, damping: 10 }}
-                      className="flex items-center justify-center"
-                    >
-                      <motion.div
-                        className="w-7 h-7 bg-green-500 rounded-full flex items-center justify-center"
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        transition={{ type: "spring", stiffness: 200, damping: 10 }}
-                      >
-                        <motion.svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="white"
-                          className="w-5 h-5"
-                          initial={{ pathLength: 0 }}
-                          animate={{ pathLength: 1 }}
-                          transition={{ duration: 0.5 }}
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
-                        </motion.svg>
-                      </motion.div>
-                    </motion.div>
-                  )}
-                </div>
-                {status.message && (
-                  <p className={`text-center mt-2 ${status.success ? "text-green-400" : "text-red-400"}`}>
-                    {status.message}
-                  </p>
-                )}
-              </form>
-            </div>
-          </motion.div>
-        ) : (
-          <motion.div
-            className="flex items-center justify-center"
-            variants={formVariants}
-            initial="hidden"
-            animate={shouldReduceMotion ? { opacity: 1, y: 0 } : "visible"}
-          >
-            {/* Contact Form */}
-            <div className="w-[600px] h-[560px] p-6 bg-gray-800 rounded-2xl shadow-2xl z-10">
-              <h3 className="text-amber-50 text-center mb-3 flex items-center" style={{ fontFamily: "Poppins", fontSize: 23 }}>
-                <img src={ContactGIF} alt="Contact GIF" className="w-13 h-13 text-center" />
-                Contact Forum
-              </h3>
-              <form onSubmit={handleSubmit} className="flex flex-col space-y-7">
-                <h2 className="font-normal text-cyan-100 mb-1" style={{ fontFamily: "sans-serif" }}>
-                  Choose your concern
-                </h2>
-                <select
-                  name="subject"
-                  value={formData.subject}
-                  onChange={handleChange}
-                  className="w-full p-2 rounded bg-gray-700 text-white outline-none focus:ring-0 focus:ring-gray-900"
-                  style={{ appearance: "none", fontFamily: "serif" }}
-                  required
-                >
-                  <option value="">Select a subject</option>
-                  <option value="Project Inquiry">Project Inquiry</option>
-                  <option value="Job Opportunity">Job Opportunity</option>
-                  <option value="Technical Support">Technical Support</option>
-                  <option value="General Inquiry">General Inquiry</option>
-                  <option value="Collaboration Request">Collaboration Request</option>
-                  <option value="Feedback">Feedback</option>
-                  <option value="Other">Other</option>
-                </select>
-                <h2 className="font-normal text-cyan-100 mb-1" style={{ fontFamily: "sans-serif" }}>
-                  Your Email
-                </h2>
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Your Email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="w-full p-2 rounded bg-gray-700 text-white outline-none focus:ring-2 focus:ring-blue-950"
-                  style={{ textTransform: "capitalize" }}
-                  required
-                />
-                <h2 className="font-normal text-cyan-100 mb-1" style={{ fontFamily: "sans-serif" }}>
-                  Let me know your concern in brief
-                </h2>
-                <div
-                  id="messageBox"
-                  contentEditable
-                  className="w-full p-2 rounded bg-gray-700 text-white outline-none focus:ring-2 focus:ring-blue-950"
-                  style={{ minHeight: '150px', whiteSpace: 'pre-wrap', wordWrap: 'break-word', textTransform: "capitalize" }}
-                  onInput={(e) => setFormData({ ...formData, message: e.target.textContent })}
-                />
-                <div className="flex items-center gap-4"> {/* New container for button + success indicator */}
-                  <button
-                    type="submit"
-                    className="w-45 p-2 bg-blue-500 hover:bg-blue-600 rounded text-white transition duration-300 flex justify-center items-center space-x-2"
-                    disabled={loading}
-                    style={{ fontFamily: "sans-serif" }}
-                  >
-                    {loading ? (
-                      <motion.div className="flex space-x-1">
-                        <motion.span
-                          className="w-2 h-2 bg-white rounded-full"
-                          animate={{ opacity: [0.3, 1, 0.3] }}
-                          transition={{ repeat: Infinity, duration: 1, ease: "easeInOut", staggerChildren: 0.2 }}
-                        />
-                        <motion.span
-                          className="w-2 h-2 bg-white rounded-full"
-                          animate={{ opacity: [0.3, 1, 0.3] }}
-                          transition={{ repeat: Infinity, duration: 1, ease: "easeInOut", delay: 0.2 }}
-                        />
-                        <motion.span
-                          className="w-2 h-2 bg-white rounded-full"
-                          animate={{ opacity: [0.3, 1, 0.3] }}
-                          transition={{ repeat: Infinity, duration: 1, ease: "easeInOut", delay: 0.4 }}
-                        />
-                      </motion.div>
-                    ) : (
-                      <>
-                        <HiPaperAirplane className="w-6 h-6 inline-block -mt-1 mr-2" style={{ transform: "rotate(40deg)" }} />
-                        Send Message
-                      </>
-                    )}
-                  </button>
-                  
-                  {/* Success indicator moved outside */}
-                  {success && (
-                    <motion.div
-                      initial={{ scale: 0, opacity: 0 }}
-                      animate={{ scale: 1.3, opacity: 1 }}
-                      exit={{ scale: 0, opacity: 0 }}
-                      transition={{ type: "spring", stiffness: 200, damping: 10 }}
-                      className="flex items-center justify-center"
-                    >
-                      <motion.div
-                        className="w-7 h-7 bg-green-500 rounded-full flex items-center justify-center"
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        transition={{ type: "spring", stiffness: 200, damping: 10 }}
-                      >
-                        <motion.svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="white"
-                          className="w-5 h-5"
-                          initial={{ pathLength: 0 }}
-                          animate={{ pathLength: 1 }}
-                          transition={{ duration: 0.5 }}
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
-                        </motion.svg>
-                      </motion.div>
-                    </motion.div>
-                  )}
-                </div>
-              </form>
-            </div>
-            <div className="h-120 w-[5px] bg-gradient-to-b from-gray-500 via-gray-400 to-gray-500 opacity-50 mx-10 rounded-2xl"></div>
-            <div className="flex flex-col place-items-start space-y-4">
-              <PhoneRevealButton />
-              <div className="flex justify-items-start w-full mt-6 space-x-8">
-                <a 
-                  href="https://www.linkedin.com/in/shadhir-fawz-30739730a/" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="relative bg-blue-950 text-white p-2 rounded-lg text-3xl overflow-hidden"
-                  onMouseEnter={() => setHoverStates({...hoverStates, linkedin: true})}
-                  onMouseLeave={() => {
-                    setHoverStates({...hoverStates, linkedin: 'exiting'});
-                    setTimeout(() => setHoverStates({...hoverStates, linkedin: false}), 300);
-                  }}
-                >
-                  <div className="relative z-10">
-                    <FaLinkedin />
-                  </div>
-                  <motion.div
-                    className="absolute inset-0 bg-white z-0"
-                    animate={{ 
-                      x: hoverStates.linkedin === true ? '0%' : 
-                        hoverStates.linkedin === 'exiting' ? '100%' : '-110%',
-                      transition: { duration: 0.3 }
-                    }}
-                  />
-                </a>
-                <a 
-                  href="mailto:ShadhirFawz19@gmail.com" 
-                  className="relative bg-blue-950 text-white p-2 rounded-lg text-3xl overflow-hidden"
-                  onMouseEnter={() => setHoverStates({...hoverStates, email: true})}
-                  onMouseLeave={() => {
-                    setHoverStates({...hoverStates, email: 'exiting'});
-                    setTimeout(() => setHoverStates({...hoverStates, email: false}), 300);
-                  }}
-                >
-                  <div className="relative z-10">
-                    <FaEnvelope />
-                  </div>
-                  <motion.div
-                    className="absolute inset-0 bg-white z-0"
-                    animate={{ 
-                      x: hoverStates.email === true ? '0%' : 
-                        hoverStates.email === 'exiting' ? '100%' : '-110%',
-                      transition: { duration: 0.3 }
-                    }}
-                  />
-                </a>
-                <a 
-                  href="https://github.com/ShadhirFawz" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="relative bg-blue-950 text-white p-2 rounded-lg text-3xl overflow-hidden"
-                  onMouseEnter={() => setHoverStates({...hoverStates, github: true})}
-                  onMouseLeave={() => {
-                    setHoverStates({...hoverStates, github: 'exiting'});
-                    setTimeout(() => setHoverStates({...hoverStates, github: false}), 300);
-                  }}
-                >
-                  <div className="relative z-10">
-                    <FaGithub />
-                  </div>
-                  <motion.div
-                    className="absolute inset-0 bg-white z-0"
-                    animate={{ 
-                      x: hoverStates.github === true ? '0%' : 
-                        hoverStates.github === 'exiting' ? '100%' : '-110%',
-                      transition: { duration: 0.3 }
-                    }}
-                  />
-                </a>
-              </div>
-              <motion.div
-                className="h-1 w-[400px] bg-gradient-to-b from-gray-500 via-gray-400 to-gray-600 opacity-50 mx-0 mt-5 rounded-2xl"
-                variants={lineVariants}
-                initial="hidden"
-                animate={shouldReduceMotion ? { x: 0 } : "visible"}
+                <option value="">Select a subject</option>
+                <option value="Project Inquiry">Project Inquiry</option>
+                <option value="Job Opportunity">Job Opportunity</option>
+                <option value="Technical Support">Technical Support</option>
+                <option value="General Inquiry">General Inquiry</option>
+                <option value="Collaboration Request">Collaboration Request</option>
+                <option value="Feedback">Feedback</option>
+                <option value="Other">Other</option>
+              </select>
+              <h2 className="font-normal text-cyan-100 mb-1" style={{ fontFamily: "sans-serif" }}>
+                Your Email
+              </h2>
+              <input
+                type="email"
+                name="email"
+                placeholder="Your Email"
+                value={formData.email}
+                onChange={handleChange}
+                className="w-full p-2 rounded bg-gray-700 text-white outline-none focus:ring-2 focus:ring-blue-950"
+                style={{ textTransform: "capitalize" }}
+                required
               />
-              <motion.h3
-                className="text-cyan-100 text-center mt-2 mb-3 flex items-center z-10"
-                style={{ fontFamily: "Poppins", fontSize: 15 }}
-                variants={locationVariants}
-                initial="hidden"
-                animate={shouldReduceMotion ? { opacity: 1, y: 0 } : "visible"}
+              <h2 className="font-normal text-cyan-100 mb-1" style={{ fontFamily: "sans-serif" }}>
+                Let me know your concern in brief
+              </h2>
+              <div
+                id="messageBox"
+                contentEditable
+                className="w-full p-2 rounded bg-gray-700 text-white outline-none focus:ring-2 focus:ring-blue-950"
+                style={{ minHeight: '150px', whiteSpace: 'pre-wrap', wordWrap: 'break-word', textTransform: "capitalize" }}
+                onInput={(e) => setFormData({ ...formData, message: e.target.textContent })}
+              />
+              <div className="flex items-center gap-4"> {/* New container for button + success indicator */}
+                <button
+                  type="submit"
+                  className="w-45 p-2 bg-blue-500 hover:bg-blue-600 rounded text-white transition duration-300 flex justify-center items-center space-x-2"
+                  disabled={loading}
+                  style={{ fontFamily: "sans-serif" }}
+                >
+                  {loading ? (
+                    <motion.div className="flex space-x-1">
+                      <motion.span
+                        className="w-2 h-2 bg-white rounded-full"
+                        animate={{ opacity: [0.3, 1, 0.3] }}
+                        transition={{ repeat: Infinity, duration: 1, ease: "easeInOut", staggerChildren: 0.2 }}
+                      />
+                      <motion.span
+                        className="w-2 h-2 bg-white rounded-full"
+                        animate={{ opacity: [0.3, 1, 0.3] }}
+                        transition={{ repeat: Infinity, duration: 1, ease: "easeInOut", delay: 0.2 }}
+                      />
+                      <motion.span
+                        className="w-2 h-2 bg-white rounded-full"
+                        animate={{ opacity: [0.3, 1, 0.3] }}
+                        transition={{ repeat: Infinity, duration: 1, ease: "easeInOut", delay: 0.4 }}
+                      />
+                    </motion.div>
+                  ) : (
+                    <>
+                      <HiPaperAirplane className="w-6 h-6 inline-block -mt-1 mr-2" style={{ transform: "rotate(40deg)" }} />
+                      Send Message
+                    </>
+                  )}
+                </button>
+                
+                {/* Success indicator moved outside */}
+                {success && (
+                  <motion.div
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: 1.3, opacity: 1 }}
+                    exit={{ scale: 0, opacity: 0 }}
+                    transition={{ type: "spring", stiffness: 200, damping: 10 }}
+                    className="flex items-center justify-center"
+                  >
+                    <motion.div
+                      className="w-7 h-7 bg-green-500 rounded-full flex items-center justify-center"
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: "spring", stiffness: 200, damping: 10 }}
+                    >
+                      <motion.svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="white"
+                        className="w-5 h-5"
+                        initial={{ pathLength: 0 }}
+                        animate={{ pathLength: 1 }}
+                        transition={{ duration: 0.5 }}
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
+                      </motion.svg>
+                    </motion.div>
+                  </motion.div>
+                )}
+              </div>
+            </form>
+          </div>
+          <div className="h-120 w-[5px] bg-gradient-to-b from-gray-500 via-gray-400 to-gray-500 opacity-50 mx-10 rounded-2xl"></div>
+          <div className="flex flex-col place-items-start space-y-4">
+            <PhoneRevealButton />
+            <div className="flex justify-items-start w-full mt-6 space-x-8">
+              <a 
+                href="https://www.linkedin.com/in/shadhir-fawz-30739730a/" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="relative bg-blue-950 text-white p-2 rounded-lg text-3xl overflow-hidden"
+                onMouseEnter={() => setHoverStates({...hoverStates, linkedin: true})}
+                onMouseLeave={() => {
+                  setHoverStates({...hoverStates, linkedin: 'exiting'});
+                  setTimeout(() => setHoverStates({...hoverStates, linkedin: false}), 300);
+                }}
               >
-                <FaMapMarkerAlt className="w-5 h-7 text-center object-contain mr-3.5" />
-                Kandy, Sri Lanka
-              </motion.h3>
+                <div className="relative z-10">
+                  <FaLinkedin />
+                </div>
+                <motion.div
+                  className="absolute inset-0 bg-white z-0"
+                  animate={{ 
+                    x: hoverStates.linkedin === true ? '0%' : 
+                      hoverStates.linkedin === 'exiting' ? '100%' : '-110%',
+                    transition: { duration: 0.3 }
+                  }}
+                />
+              </a>
+              <a 
+                href="mailto:ShadhirFawz19@gmail.com" 
+                className="relative bg-blue-950 text-white p-2 rounded-lg text-3xl overflow-hidden"
+                onMouseEnter={() => setHoverStates({...hoverStates, email: true})}
+                onMouseLeave={() => {
+                  setHoverStates({...hoverStates, email: 'exiting'});
+                  setTimeout(() => setHoverStates({...hoverStates, email: false}), 300);
+                }}
+              >
+                <div className="relative z-10">
+                  <FaEnvelope />
+                </div>
+                <motion.div
+                  className="absolute inset-0 bg-white z-0"
+                  animate={{ 
+                    x: hoverStates.email === true ? '0%' : 
+                      hoverStates.email === 'exiting' ? '100%' : '-110%',
+                    transition: { duration: 0.3 }
+                  }}
+                />
+              </a>
+              <a 
+                href="https://github.com/ShadhirFawz" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="relative bg-blue-950 text-white p-2 rounded-lg text-3xl overflow-hidden"
+                onMouseEnter={() => setHoverStates({...hoverStates, github: true})}
+                onMouseLeave={() => {
+                  setHoverStates({...hoverStates, github: 'exiting'});
+                  setTimeout(() => setHoverStates({...hoverStates, github: false}), 300);
+                }}
+              >
+                <div className="relative z-10">
+                  <FaGithub />
+                </div>
+                <motion.div
+                  className="absolute inset-0 bg-white z-0"
+                  animate={{ 
+                    x: hoverStates.github === true ? '0%' : 
+                      hoverStates.github === 'exiting' ? '100%' : '-110%',
+                    transition: { duration: 0.3 }
+                  }}
+                />
+              </a>
             </div>
-          </motion.div>
-        )}
+            <motion.div
+              className="h-1 w-[400px] bg-gradient-to-b from-gray-500 via-gray-400 to-gray-600 opacity-50 mx-0 mt-5 rounded-2xl"
+              variants={lineVariants}
+              initial="hidden"
+              animate={shouldReduceMotion ? { x: 0 } : "visible"}
+            />
+            <motion.h3
+              className="text-cyan-100 text-center mt-2 mb-3 flex items-center z-10"
+              style={{ fontFamily: "Poppins", fontSize: 15 }}
+              variants={locationVariants}
+              initial="hidden"
+              animate={shouldReduceMotion ? { opacity: 1, y: 0 } : "visible"}
+            >
+              <FaMapMarkerAlt className="w-5 h-7 text-center object-contain mr-3.5" />
+              Kandy, Sri Lanka
+            </motion.h3>
+          </div>
+        </motion.div>
       </div>
     </div>
   );

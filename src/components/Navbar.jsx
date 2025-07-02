@@ -114,7 +114,7 @@ export default function ProjectsMenu() {
     <div className="relative group">
       {/* Projects Button (unchanged) */}
       <button 
-      className="flex items-center gap-2 font-medium text-blue-600 px-6 py-2 rounded-lg transition-all hover:bg-gray-800"
+      className="flex items-center gap-2 font-medium text-whie px-6 py-2 rounded-lg transition-all hover:bg-gray-800"
       style={{fontFamily: "revert"}}>
         <CodeBracketSquareIcon className="h-5 w-5" />
         Projects
@@ -175,6 +175,25 @@ export default function ProjectsMenu() {
               </div>
             </div>
           ))}
+          <div className="sticky bottom-0 bg-gray-900 border-t border-gray-700 p-2 text-center rounded-br-2xl rounded-bl-2xl">
+            <a 
+              href="/projects" 
+              className="text-blue-400 hover:text-blue-300 transition-colors flex items-center justify-center gap-1"
+              style={{fontFamily: "'Roboto', sans-serif", fontWeight: "normal"}}
+            >
+              View All Projects
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                fill="none" 
+                viewBox="0 0 24 24" 
+                strokeWidth={1.5} 
+                stroke="currentColor" 
+                className="w-4 h-4"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+              </svg>
+            </a>
+          </div>
         </div>
 
         {/* Fixed Position Tech Stack Display */}

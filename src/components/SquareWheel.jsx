@@ -1,9 +1,17 @@
 import React from "react";
 import { motion, useMotionValue, useTransform } from "framer-motion";
 
-const AnimatedSquares = () => {
+const AnimatedSquares = ({ isMobile }) => {
+
+  if (isMobile) {
+    return null;
+  }
+  
+  const maxWidth = isMobile ? 200 : 500;
   const x = useMotionValue(0);
-  const lineWidth = useTransform(x, [-10, 400], [0, 400]);
+  const lineWidth = useTransform(x, [-10, maxWidth], [0, maxWidth]);
+
+  
 
   return (
     <div style={{ position: "relative", height: "auto" }}>
@@ -11,13 +19,13 @@ const AnimatedSquares = () => {
       <motion.div
         style={{
           position: "absolute",
-          top: "5px",
-          left: "9px",
+          top: isMobile ? "3px" : "5px",
           height: "2px",
           whiteSpace: "nowrap",
           display: "inline-block",
           backgroundColor: "#1e5c94",
           width: lineWidth,
+          maxWidth: `${maxWidth}px`,
         }}
       />
 
@@ -25,28 +33,28 @@ const AnimatedSquares = () => {
       <motion.div
         style={{
           position: "relative",
-          width: "20px",
-          height: "20px",
-          margin: "9px",
-          bottom: "25px",
+          width: isMobile ? "16px" : "20px",
+          height: isMobile ? "16px" : "20px",
+          margin: isMobile ? "7px" : "9px",
+          bottom: isMobile ? "20px" : "25px",
           x,
         }}
-        animate={{ x: [-10, 390] }}
+        animate={{ x: [-10, maxWidth - 50] }} // Adjusted for mobile
         transition={{
           duration: 1.5,
           ease: "easeOut",
           repeat: 0,
         }}
         onAnimationComplete={() => {
-          x.set(390);
+          x.set(maxWidth - 50);
         }}
       >
         {/* Blue Square */}
         <motion.div
           style={{
             position: "absolute",
-            width: "8px",
-            height: "8px",
+            width: isMobile ? "6px" : "8px",
+            height: isMobile ? "6px" : "8px",
             top: "0",
             left: "0",
             backgroundColor: "#3b82f6",
@@ -66,10 +74,10 @@ const AnimatedSquares = () => {
         <motion.div
           style={{
             position: "absolute",
-            width: "8px",
-            height: "8px",
-            top: "10px",
-            left: "10px",
+            width: isMobile ? "6px" : "8px",
+            height: isMobile ? "6px" : "8px",
+            top: isMobile ? "8px" : "10px",
+            left: isMobile ? "8px" : "10px",
             backgroundColor: "#ffffff",
             transformOrigin: "center center",
           }}
