@@ -24,7 +24,7 @@ export default defineConfig({
       svgo: { plugins: [{ name: 'removeViewBox', active: false }] },
     }),
   ],
-  assetsInclude: ["**/*.PNG", "**/*.pdf"],
+  assetsInclude: ["**/*.png", "**/*.pdf", "**/*.jpg", "**/*.jpeg", "**/*.svg"],
   resolve: {
     dedupe: ["react", "react-dom"],
   },
