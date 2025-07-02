@@ -8,7 +8,16 @@ dotenv.config();  // Loading environment variables from .env file
 const app = express();
 
 // Middleware setup
-app.use(cors());
+const corsOptions = {
+  origin: [
+    "https://your-vercel-app.vercel.app", 
+    "http://localhost:3000"
+  ],
+  methods: "POST",
+  credentials: true
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());  // Use express.json() instead of bodyParser.json()
 
 app.post("/send-email", async (req, res) => {
