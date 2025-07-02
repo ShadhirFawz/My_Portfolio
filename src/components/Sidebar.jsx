@@ -14,8 +14,6 @@ const Sidebar = () => {
   const [animateBrackets, setAnimateBrackets] = useState(false);
   const [hasAnimated, setHasAnimated] = useState(false);
 
-  const BASE_URL = process.env.REACT_APP_BASE_URL || '';
-
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
@@ -64,7 +62,7 @@ const Sidebar = () => {
         transition={{ type: "spring", stiffness: 120 }}
         className="fixed top-1/4 right-5 h-80 w-18 bg-gray-900 rounded-full flex flex-col items-center justify-center space-y-8 shadow-lg border-1 border-b-blue-200"
       >
-        <motion.a href={`${BASE_URL}/`} 
+        <motion.a href="/" 
            className="text-white text-3xl hover:text-blue-400 transition"
            whileHover={{ rotateY: 180 }}
            transition={{ duration: 0.7 }}
@@ -78,7 +76,7 @@ const Sidebar = () => {
 
         {/* Animated Tech Icon - Updated with /tech logic */}
         <a
-          href={location.pathname === "/tech" ? "#" : `${BASE_URL}/tech`}
+          href={location.pathname === "/tech" ? "#" : "/tech"}
           className={`text-white text-3xl transition ${location.pathname === "/tech" ? "opacity-50 cursor-default pointer-events-none" : "hover:text-blue-400"}`}
           onMouseEnter={() => {
             if (!hasAnimated && location.pathname !== "/tech") {
@@ -128,7 +126,7 @@ const Sidebar = () => {
 
         {/* Envelope Icon (unchanged) */}
         <a
-          href={location.pathname === "/contact" ? "#" : `${BASE_URL}/contact`}
+          href={location.pathname === "/contact" ? "#" : "/contact"}
           className={`text-white text-3xl transition ${location.pathname === "/contact" ? "opacity-50 cursor-default pointer-events-none" : "hover:text-blue-400"}`} 
           onMouseEnter={() => location.pathname !== "/contact" && setIsEnvelopeHovered(true)}
           onMouseLeave={() => location.pathname !== "/contact" && setIsEnvelopeHovered(false)}

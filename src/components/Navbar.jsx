@@ -24,8 +24,6 @@ import CSpace from "../assets/images/CSpaceImg.jpg"
 import PharmacyImg from '../assets/images/PharmacyImg.png';
 import { motion } from "framer-motion";
 
-const BASE_URL = process.env.REACT_APP_BASE_URL || '';
-
 // Status-based color mapping
 const statusColors = {
   Completed: "bg-green-500",
@@ -168,7 +166,6 @@ export default function ProjectsMenu() {
                 <p className="text-gray-400 text-sm">{project.description}</p>
                 <a
                   href={project.link}
-                  target="_blank"
                   className="text-blue-400 underline flex items-center gap-1 transition-all hover:gap-2"
                   style={{fontFamily: "sans-serif"}}
                 >
@@ -180,7 +177,7 @@ export default function ProjectsMenu() {
           ))}
           <div className="sticky bottom-0 bg-gray-900 border-t border-gray-700 p-2 text-center rounded-br-2xl rounded-bl-2xl">
             <a 
-              href={`${BASE_URL}/projects`}
+              href="/projects" 
               className="text-blue-400 hover:text-blue-300 transition-colors flex items-center justify-center gap-1"
               style={{fontFamily: "'Roboto', sans-serif", fontWeight: "normal"}}
             >
@@ -248,9 +245,9 @@ function NavList() {
   return (
     <ul className="mt-2 mb-4 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center">
       <ProjectsMenu />
-      <Typography as="a" target="_blank" rel="noopener noreferrer" href={BASE_URL || '/'} className="font-medium">
+      <Typography as="a" target="_blank" rel="noopener noreferrer" href="/" className="font-medium">
         <MenuItem className="flex items-center gap-2 lg:rounded-full">
-          <HomeIcon className="h-[24px] w-[20px]" href={BASE_URL || '/'} />
+          <HomeIcon className="h-[24px] w-[20px]" />
         </MenuItem>
       </Typography>
     </ul>
@@ -298,7 +295,7 @@ export function ComplexNavbar() {
         <div className="relative mx-2.5 flex items-center justify-between">
           <div class="rounded-md h-7 w-7 border-4 border-t-4 border-blue-500 animate-spin absolute"></div>
           <div className="flex">
-            <Typography as="a" href={BASE_URL || '/'} className="mr-4 ml-12 cursor-default" style={{ fontFamily: "Times New Roman" }}>
+            <Typography as="a" href="/" className="mr-4 ml-12 cursor-default" style={{ fontFamily: "Times New Roman" }}>
               MY PORTFOLIO
             </Typography>
           </div>

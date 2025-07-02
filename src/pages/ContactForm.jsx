@@ -10,8 +10,6 @@ import { ComplexNavbar } from "../components/Navbar";
 import { FaGithub, FaLinkedin, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 import { GrMail } from "react-icons/gr";
 
-const BASE_URL = process.env.REACT_APP_BASE_URL || '';
-
 const ContactForm = () => {
   const [formData, setFormData] = useState({
     subject: "",
@@ -117,7 +115,7 @@ const ContactForm = () => {
     e.preventDefault();
     setClickedIndex(index);
     setTimeout(() => {
-      window.location.href = `${BASE_URL}/${link.toLowerCase()}`;
+      window.location.href = `/${link.toLowerCase()}`;
       setClickedIndex(null);
     }, 500);
   };
@@ -237,7 +235,7 @@ const ContactForm = () => {
             {["Portfolio", "Projects", "Contact"].map((text, index) => (
               <a
                 key={index}
-                href={`${BASE_URL}/${text.toLowerCase()}`}
+                href={`/${text.toLowerCase()}`}
                 className="relative text-gray-300 text-lg font-semibold font-serif py-2 px-8 w-full rounded-lg transition-all duration-300 hover:text-blue-400 hover:scale-105 overflow-visible block z-1"
                 onClick={(e) => handleClick(e, index, text)}
               >
@@ -310,7 +308,7 @@ const ContactForm = () => {
         initial={{ x: 0 }}
         whileHover={{ x: -10 }}
         transition={{ type: "spring", stiffness: 200, damping: 10 }}
-        onClick={() => (window.location.href = BASE_URL || '/')}
+        onClick={() => (window.location.href = "/")}
         className="fixed top-0 left-0 h-full w-[12.5%] bg-gray-900 flex items-center justify-center cursor-pointer shadow-lg"
         style={{
           boxShadow: "0px 0px 20px rgba(0, 200, 255, 0.6)",
