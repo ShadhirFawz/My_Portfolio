@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Router } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
 import ContactForm from "./pages/ContactForm";
 import TechStack from "./pages/TechStack";
@@ -9,12 +9,15 @@ pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pd
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/contact" element={<ContactForm />} />
-        <Route path="/tech" element={<TechStack />} />
-        <Route path="/projects" element={<Projects />} />
-      </Routes>
+      <Router>
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/contact" element={<ContactForm />} />
+          <Route path="/tech" element={<TechStack />} />
+          <Route path="/projects" element={<Projects />} />
+        </Routes>
+      </Router>
+      
     </BrowserRouter>
   );
 }
