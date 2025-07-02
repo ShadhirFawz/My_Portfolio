@@ -7,6 +7,8 @@ import ResumePDF from "../Shadhir_Resume.pdf";
 import AnimatedCloseButton from "../components/AnimatedCloseButoon";
 import { FaLaptopCode } from "react-icons/fa";
 
+const BASE_URL = process.env.REACT_APP_BASE_URL || '';
+
 // Tech stack icons from TechStackScroll.jsx
 const techStack = [
   { name: "Java", src: "https://raw.githubusercontent.com/tandpfun/skill-icons/main/icons/Java-Dark.svg", url: "https://www.java.com/" },
@@ -400,7 +402,7 @@ const TechStack = () => {
                 <div className="flex items-center space-x-3 mt-6">
                   <motion.button
                     className="bottom-0 right-0 px-0 py-0 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors relative overflow-hidden"
-                    onClick={() => (window.location.href = "/projects")}
+                    onClick={() => (window.location.href = `${BASE_URL}/projects`)}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     style={{ fontFamily: "sans-serif", zIndex: 90 }}

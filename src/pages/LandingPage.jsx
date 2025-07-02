@@ -15,6 +15,8 @@ import GlitchText from "../components/GlitchText";
 import TechStackScroll from "../components/TechStackScroll";
 import AnimatedTitle from "../components/AnimatedTitle";
 
+const BASE_URL = process.env.REACT_APP_BASE_URL || '';
+
 const LandingPage = () => {
   const navigate = useNavigate();
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -102,7 +104,7 @@ const LandingPage = () => {
     setClickedIndex(index); // Mark the clicked link
 
     setTimeout(() => {
-      window.location.href = `/${link.toLowerCase()}`;
+      window.location.href = `${process.env.REACT_APP_BASE_URL || ''}/${link.toLowerCase()}`;
       setClickedIndex(null); // Reset after navigation
     }, 500);
   };
@@ -184,7 +186,7 @@ const LandingPage = () => {
               {["Portfolio", "Projects", "Contact"].map((text, index) => (
                 <a
                   key={index}
-                  href={`/${text.toLowerCase()}`}
+                  href={`${BASE_URL}/${text.toLowerCase()}`}
                   className="relative text-gray-300 text-lg font-semibold font-serif py-2 px-8 w-full rounded-lg transition-all duration-300 hover:text-blue-400 hover:scale-105 overflow-visible block z-1"
                   onClick={(e) => handleClick(e, index, text)}
                 >
@@ -344,7 +346,7 @@ const LandingPage = () => {
                     }
                     transition={{ duration: 0.3 }}
                     style={{ backgroundColor: "#262626" }}
-                    onClick={() => navigate("/contact")}
+                    onClick={() => window.location.href = `${BASE_URL}/contact`}
                   >
                     <FaEnvelope className="text-white w-5 h-5 flex-none" />
                   </motion.button>
