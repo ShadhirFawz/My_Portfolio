@@ -24,6 +24,7 @@ export default defineConfig({
       svgo: { plugins: [{ name: 'removeViewBox', active: false }] },
     }),
   ],
+  base: process.env.VITE_BASE_PATH || "/my_Portfolio",
   assetsInclude: ["**/*.png", "**/*.pdf", "**/*.jpg", "**/*.jpeg", "**/*.svg"],
   resolve: {
     dedupe: ["react", "react-dom"],
