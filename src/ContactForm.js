@@ -11,7 +11,7 @@ const ContactForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
             try {
-                const response = await fetch("https://portfolio-backend-<yourname>.koyeb.app/send-email", {
+                const response = await fetch("https://my-portfolio-2wy5.vercel.app/send-email", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData),
