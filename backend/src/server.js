@@ -10,10 +10,8 @@ const app = express();
 // Middleware setup
 const corsOptions = {
   origin: [
-    "https://shadf-portfolio.vercel.app", 
-    "http://localhost:3000"
+    "https://shadf-portfolio.vercel.app",
   ],
-  methods: "POST",
   credentials: true
 };
 
