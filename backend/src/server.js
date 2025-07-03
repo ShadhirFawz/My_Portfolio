@@ -12,11 +12,15 @@ const corsOptions = {
   origin: [
     "https://shadf-portfolio.vercel.app",
   ],
+  methods: ["POST", "OPTIONS"], // Explicitly allow OPTIONS for preflight
+  allowedHeaders: ["Content-Type"],
   credentials: true
 };
 
 app.use(cors(corsOptions));
 app.use(express.json());  // Use express.json() instead of bodyParser.json()
+
+app.options('/send-email', cors(corsOptions)); 
 
 app.post("/send-email", async (req, res) => {
     const { subject, email, message } = req.body;

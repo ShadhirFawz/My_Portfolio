@@ -12,18 +12,20 @@ const ContactForm = () => {
         e.preventDefault();
             try {
                 const response = await fetch("https://my-portfolio-2wy5.vercel.app/send-email", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(formData),
+                    method: "POST",
+                    headers: { 
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
+                    },
+                    mode: "cors", // Explicitly enable CORS
+                    credentials: "include", // If using credentials
+                    body: JSON.stringify(formData),
                 });
 
+                if (!response.ok) throw new Error("Failed to send");
+                    
                 const data = await response.json();
-                
-                if (!response.ok) {
-                throw new Error(data.error || "Failed to send message");
-                }
-                
-                setResponseMessage("Message sent successfully!");
+                setResponseMessage(data.message || "Message sent successfully!");
                 setFormData({ subject: "", email: "", message: "" });
                 
             } catch (error) {
