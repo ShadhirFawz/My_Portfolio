@@ -24,7 +24,6 @@ export default defineConfig({
       svgo: { plugins: [{ name: 'removeViewBox', active: false }] },
     }),
   ],
-  base: process.env.VITE_BASE_PATH || "https://shadf-portfolio.vercel.app",
   assetsInclude: ["**/*.png", "**/*.pdf", "**/*.jpg", "**/*.jpeg", "**/*.svg"],
   resolve: {
     dedupe: ["react", "react-dom"],
