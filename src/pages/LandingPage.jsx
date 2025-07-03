@@ -125,7 +125,7 @@ const LandingPage = () => {
                 onMouseLeave={() => setHovered(false)}
                 style={{ fontFamily: "cursive" }}
               >
-                ShaD_F
+                ShaDF
               </h1>
               <motion.div
                 className="absolute left-0 bottom-0 h-[2px] bg-blue-400"
