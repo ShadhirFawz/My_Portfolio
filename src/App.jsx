@@ -9,15 +9,12 @@ pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pd
 function App() {
   return (
     <BrowserRouter>
-      <Router>
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/contact" element={<ContactForm />} />
           <Route path="/tech" element={<TechStack />} />
           <Route path="/projects" element={<Projects />} />
         </Routes>
-      </Router>
-      
     </BrowserRouter>
   );
 }

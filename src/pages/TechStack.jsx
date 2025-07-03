@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import JetpackCompose from '../assets/images/jetpack-compose.png';
 import Sidebar from "../components/Sidebar";
@@ -398,18 +399,19 @@ const TechStack = () => {
                 ))}
                 {/* View My Work Button */}
                 <div className="flex items-center space-x-3 mt-6">
-                  <motion.button
-                    className="bottom-0 right-0 px-0 py-0 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors relative overflow-hidden"
-                    onClick={() => (window.location.href = "/projects")}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    style={{ fontFamily: "sans-serif", zIndex: 90 }}
-                  >
-                    <span className="relative z-20">View My Work</span>
-                  </motion.button>
-                  <FaLaptopCode
-                    className="w-9 h-9 text-gray-400 hover:text-blue-400 transition-colors"
-                  />
+                  <Link to="/projects" className="text-white no-underline">
+                    <motion.button
+                      className="bottom-0 right-0 px-0 py-0 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors relative overflow-hidden"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      style={{ fontFamily: "sans-serif", zIndex: 90 }}
+                    >
+                      
+                        <span className="relative z-20">View My Work</span>
+                      
+                    </motion.button>
+                  </Link>
+                  <FaLaptopCode className="w-9 h-9 text-gray-400 hover:text-blue-400 transition-colors" />
                 </div>
               </div>
             </div>

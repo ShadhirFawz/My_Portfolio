@@ -18,6 +18,7 @@ import {
   FolderIcon,
   HomeIcon
 } from "@heroicons/react/24/solid";
+import { Link } from "react-router-dom";
 import { GrHome } from "react-icons/gr";
 import FuilioImg from "../assets/images/FuilioImg.jpg";
 import CSpace from "../assets/images/CSpaceImg.jpg"
@@ -176,8 +177,8 @@ export default function ProjectsMenu() {
             </div>
           ))}
           <div className="sticky bottom-0 bg-gray-900 border-t border-gray-700 p-2 text-center rounded-br-2xl rounded-bl-2xl">
-            <a 
-              href="/projects" 
+            <Link
+              to="/projects" 
               className="text-blue-400 hover:text-blue-300 transition-colors flex items-center justify-center gap-1"
               style={{fontFamily: "'Roboto', sans-serif", fontWeight: "normal"}}
             >
@@ -192,7 +193,7 @@ export default function ProjectsMenu() {
               >
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
               </svg>
-            </a>
+            </Link>
           </div>
         </div>
 
@@ -245,10 +246,12 @@ function NavList() {
   return (
     <ul className="mt-2 mb-4 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center">
       <ProjectsMenu />
-      <Typography as="a" target="_blank" rel="noopener noreferrer" href="/" className="font-medium">
-        <MenuItem className="flex items-center gap-2 lg:rounded-full">
-          <HomeIcon className="h-[24px] w-[20px]" />
-        </MenuItem>
+      <Typography as="a" target="_blank" rel="noopener noreferrer" className="font-medium">
+        <Link to="/">
+          <MenuItem className="flex items-center gap-2 lg:rounded-full">
+            <HomeIcon className="h-[24px] w-[20px]" />
+          </MenuItem>
+        </Link>
       </Typography>
     </ul>
   );
@@ -296,7 +299,9 @@ export function ComplexNavbar() {
           <div class="rounded-md h-7 w-7 border-4 border-t-4 border-blue-500 animate-spin absolute"></div>
           <div className="flex">
             <Typography as="a" href="/" className="mr-4 ml-12 cursor-default" style={{ fontFamily: "Times New Roman" }}>
+            <Link to="/" className="cursor-default">
               MY PORTFOLIO
+            </Link>
             </Typography>
           </div>
 

@@ -1,5 +1,6 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { useRef, useState, useMemo, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { FaLinkedin, FaGithub, FaEnvelope } from "react-icons/fa";
 import Github from '../assets/images/github-logo.png';
 import Gmail from '../assets/images/gmail-logo.png';
@@ -102,7 +103,7 @@ const LandingPage = () => {
     setClickedIndex(index); // Mark the clicked link
 
     setTimeout(() => {
-      window.location.href = `/${link.toLowerCase()}`;
+      navigate(`/${link.toLowerCase()}`);
       setClickedIndex(null); // Reset after navigation
     }, 500);
   };
@@ -182,9 +183,9 @@ const LandingPage = () => {
             {/* Nav Links */}
             <div className="flex flex-col space-y-6 mt-25">
               {["Portfolio", "Projects", "Contact"].map((text, index) => (
-                <a
+                <Link
                   key={index}
-                  href={`/${text.toLowerCase()}`}
+                  to={`/${text.toLowerCase()}`}
                   className="relative text-gray-300 text-lg font-semibold font-serif py-2 px-8 w-full rounded-lg transition-all duration-300 hover:text-blue-400 hover:scale-105 overflow-visible block z-1"
                   onClick={(e) => handleClick(e, index, text)}
                 >
@@ -195,7 +196,7 @@ const LandingPage = () => {
                     transition={{ duration: 0.5, ease: "easeInOut" }}
                   />
                   <span className="relative z-10 text-amber-50 font-serif">{text}</span>
-                </a>
+                </Link>
               ))}
             </div>
 
@@ -333,7 +334,7 @@ const LandingPage = () => {
                   Let's Connect
                 </motion.button>
 
-                <a href="/contact" className="absolute left-full ml-[-40px]">
+                <Link to="/contact" className="absolute left-full ml-[-40px]">
                   <motion.button
                     className="flex items-center justify-center w-11 h-11 text-blue-600 rounded-t-md rounded-e-none rounded-b-md shadow-lg flex-none"
                     initial={{ opacity: 0, x: -40 }}
@@ -348,7 +349,7 @@ const LandingPage = () => {
                   >
                     <FaEnvelope className="text-white w-5 h-5 flex-none" />
                   </motion.button>
-                </a>
+                </Link>
               </motion.div>
 
               {/* Social Icons */}
