@@ -95,12 +95,9 @@ const TechStack = () => {
   if (isMobile) {
     return (
       <div className="fixed inset-0 overflow-y-auto">
-        <div className="fixed inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-800 p-4 md:p-6">
+        <div className="fixed inset-0 bg-gradient-to-l from-purple-900/90 via-black to-blue-900/80 p-4 md:p-6">
           <motion.div
             className="absolute inset-0 pointer-events-none"
-            style={{
-              background: `radial-gradient(circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(50, 150, 255, 0.2), rgba(0, 0, 0, 0.7))`,
-            }}
             transition={{ duration: 0.3 }}
           />
           <div className="md:hidden flex items-center justify-center h-full z-500">
@@ -120,13 +117,19 @@ const TechStack = () => {
 
   return (
      <div className="fixed inset-0 overflow-y-auto">
-      <div className="flex flex-col items-center justify-center w-full min-h-screen fixed inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-800">
+      <div className="flex flex-col items-center justify-center w-full min-h-screen fixed inset-0 bg-gradient-to-l from-purple-900/90 via-black to-blue-900/80"
+           style={{
+            background: `
+              radial-gradient(circle at 20% 20%, rgba(75, 0, 130, 0.4), rgba(0, 0, 0, 0.8)),
+              radial-gradient(circle at 80% 50%, rgba(0, 191, 255, 0.3), rgba(0, 0, 0, 0.8)),
+              radial-gradient(circle at 30% 80%, rgba(138, 43, 226, 0.3), rgba(0, 0, 0, 0.8)),
+              linear-gradient(to left, rgba(75, 0, 130, 0.9), rgba(0, 0, 0, 1), rgba(0, 71, 171, 0.8))
+            `,
+          }}
+      >
         {/* Radial Gradient Background Effect */}
         <motion.div
           className="absolute inset-0 pointer-events-none"
-          style={{
-            background: `radial-gradient(circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(50, 150, 255, 0.2), rgba(0, 0, 0, 0.7))`,
-          }}
           transition={{ duration: 0.3 }}
         />
 

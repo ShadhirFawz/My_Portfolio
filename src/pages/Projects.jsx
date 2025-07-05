@@ -128,14 +128,11 @@ const Projects = () => {
     return (
       <div className="fixed inset-0 overflow-y-auto">
         <div 
-          className="fixed inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-800 p-4 md:p-6"
+          className="fixed inset-0 bg-gradient-to-l from-purple-900/90 via-black to-blue-900/80 p-4 md:p-6"
           onMouseMove={handleMouseMove}
         >
           <motion.div
             className="absolute inset-0 pointer-events-none"
-            style={{
-              background: `radial-gradient(circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(50, 150, 255, 0.2), rgba(0, 0, 0, 0.7))`,
-            }}
             transition={{ duration: 0.3 }}
           />
           <div className="md:hidden flex items-center justify-center h-full z-500">
@@ -156,15 +153,20 @@ const Projects = () => {
   return (
     <div className="fixed inset-0 overflow-y-auto">
       <div 
-        className="fixed inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-800 p-4 md:p-6"
+        className="fixed inset-0 bg-gradient-to-l from-purple-900/90 via-black to-blue-900/80 p-4 md:p-6"
         onMouseMove={handleMouseMove}
+        style={{
+          background: `
+            radial-gradient(circle at 20% 20%, rgba(75, 0, 130, 0.4), rgba(0, 0, 0, 0.8)),
+            radial-gradient(circle at 80% 50%, rgba(0, 191, 255, 0.3), rgba(0, 0, 0, 0.8)),
+            radial-gradient(circle at 30% 80%, rgba(138, 43, 226, 0.3), rgba(0, 0, 0, 0.8)),
+            linear-gradient(to left, rgba(75, 0, 130, 0.9), rgba(0, 0, 0, 1), rgba(0, 71, 171, 0.8))
+          `,
+        }}
       >
         {/* Mouse hover effect */}
         <motion.div
           className="absolute inset-0 pointer-events-none"
-          style={{
-            background: `radial-gradient(circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(50, 150, 255, 0.2), rgba(0, 0, 0, 0.7))`,
-          }}
           transition={{ duration: 0.3 }}
         />
 
@@ -184,7 +186,16 @@ const Projects = () => {
                 <motion.div
                   key={project.id}
                   className={`absolute inset-0 bg-gray-800 rounded-xl shadow-lg overflow-visible cursor-pointer transition-all duration-300 flex flex-col z-${zIndex} ${className} ${index === activeIndex ? 'border border-blue-400' : 'border border-gray-700'}`}
-                  style={{ opacity, transform }}
+                  style={{ 
+                    opacity, 
+                    transform,
+                    boxShadow: `
+                      0 -10px 15px -5px rgba(75, 0, 130, 0.4),
+                      0 -5px 10px -3px rgba(138, 43, 226, 0.3),
+                      0 10px 15px -5px rgba(0, 191, 255, 0.3),
+                      0 5px 10px -3px rgba(138, 43, 226, 0.2)
+                    `
+                  }}
                   animate={{ x: `${x}%`, scale: className === "active" ? 1 : className === "hidden" ? 0.8 : 0.9 }}
                   transition={{ type: "tween", duration: 0.15, ease: "easeInOut" }}
                   onClick={() => handleCardClick(index)}
