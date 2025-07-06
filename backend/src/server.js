@@ -10,7 +10,7 @@ const app = express();
 // Middleware setup
 const corsOptions = {
   origin: [
-    "https://shadf-portfolio.vercel.app/contact",
+    "https://shadf-portfolio.vercel.app",
   ],
   methods: ["POST", "OPTIONS"], // Explicitly allow OPTIONS for preflight
   allowedHeaders: ["Content-Type"],
