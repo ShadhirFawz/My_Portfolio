@@ -332,9 +332,16 @@ const LandingPage = () => {
               >
                 <motion.button
                   className="relative z-10 px-8 py-4 text-lg font-medium bg-blue-600 rounded-lg shadow-md border border-blue-50 text-gray-100 transition-all duration-300 flex items-center"
-                  animate={showMessage && !shouldReduceMotion ? { x: -40 } : { x: 0 }}
+                  animate={showMessage && !shouldReduceMotion ? { 
+                    x: -40,
+                    borderColor: "transparent" // Border disappears when animated
+                  } : { 
+                    x: 0,
+                    borderColor: "#ffffff" // White border in initial state
+                  }}
                   transition={{ duration: 0.3 }}
                   style={{fontFamily: "sans-serif"}}
+                  initial={{ borderColor: "#ffffff" }}
                 >
                   Let's Connect
                 </motion.button>
@@ -358,11 +365,13 @@ const LandingPage = () => {
               </motion.div>
 
               {/* Social Icons */}
-              <div className="flex space-x-8 mb-6 md:mb-0"> {/* Added margin-bottom on mobile */}
+              <div className="flex space-x-8 mb-6 md:mb-0">
+                {/* LinkedIn */}
                 <motion.a
                   href="https://www.linkedin.com/in/shadhir-fawz-30739730a/"
                   target="_blank"
                   rel="noopener noreferrer"
+                  className="relative"
                   whileHover={shouldReduceMotion ? {} : { scale: 1.1 }}
                   animate={
                     shouldReduceMotion ? {} : { y: [0, -8, 0] }
@@ -373,10 +382,14 @@ const LandingPage = () => {
                       : { repeat: Infinity, duration: 5 }
                   }
                 >
-                  <img src={LinkedIn} className="w-12 cursor-pointer" />
+                  <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-10 h-2 rounded-full bg-black opacity-20 blur-sm" />
+                  <img src={LinkedIn} className="relative z-10 w-12 cursor-pointer" />
                 </motion.a>
+
+                {/* Gmail */}
                 <motion.a
                   href="mailto:ShadhirFawz19@gmail.com"
+                  className="relative"
                   whileHover={shouldReduceMotion ? {} : { scale: 1.1 }}
                   animate={
                     shouldReduceMotion ? {} : { y: [0, -8, 0] }
@@ -387,12 +400,16 @@ const LandingPage = () => {
                       : { repeat: Infinity, duration: 5 }
                   }
                 >
-                  <img src={Gmail} className="w-12 cursor-pointer" />
+                  <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-10 h-2 rounded-full bg-black opacity-20 blur-sm" />
+                  <img src={Gmail} className="relative z-10 w-12 cursor-pointer" />
                 </motion.a>
+
+                {/* GitHub */}
                 <motion.a
                   href="https://github.com/ShadhirFawz"
                   target="_blank"
                   rel="noopener noreferrer"
+                  className="relative"
                   whileHover={shouldReduceMotion ? {} : { scale: 1.1 }}
                   animate={
                     shouldReduceMotion ? {} : { y: [0, -8, 0] }
@@ -403,7 +420,8 @@ const LandingPage = () => {
                       : { repeat: Infinity, duration: 5 }
                   }
                 >
-                  <img src={Github} className="w-12 cursor-pointer" />
+                  <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-10 h-2 rounded-full bg-black opacity-20 blur-sm" />
+                  <img src={Github} className="relative z-10 w-12 cursor-pointer" />
                 </motion.a>
               </div>
             </div>
