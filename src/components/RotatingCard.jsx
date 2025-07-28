@@ -5,6 +5,7 @@ import { RoundedBoxGeometry } from "three-stdlib";
 import * as THREE from "three";
 import { useSpring, a } from "@react-spring/three";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 const RotatingProfileCard = () => {
   const profileTexture = useLoader(TextureLoader, '/profile/fulldp.png');
@@ -95,17 +96,20 @@ const RotatingProfileCard = () => {
 
 const RotatingCard = () => {
   return (
-    <div className="w-[400px] h-[560px] overflow-visible">
-      <Canvas
-        camera={{ position: [0, 0, 8], fov: 50 }}
-        gl={{ antialias: true, preserveDrawingBuffer: true }}
-        style={{ overflow: 'visible' }}
-      >
-        <ambientLight intensity={0.3} />
-        <pointLight position={[10, 10, 10]} intensity={0.8} />
-        <RotatingProfileCard />
-      </Canvas>
-    </div>
+    <Link to='/tech'>
+      <div className="w-[400px] h-[560px] overflow-visible">
+        <Canvas
+          camera={{ position: [0, 0, 8], fov: 50 }}
+          gl={{ antialias: true, preserveDrawingBuffer: true }}
+          style={{ overflow: 'visible' }}
+        >
+          <ambientLight intensity={0.3} />
+          <pointLight position={[10, 10, 10]} intensity={0.8} />
+          <RotatingProfileCard />
+        </Canvas>
+      </div>
+    </Link>
+    
   );
 };
 

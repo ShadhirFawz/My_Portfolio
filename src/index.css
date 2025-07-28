@@ -40,7 +40,6 @@ body {
   min-width: 320px;
   min-height: 100vh;
   padding: 0;
-  overflow: hidden;
   background-color: #242424;
 }
 .max-h-96::-webkit-scrollbar { display: none; }

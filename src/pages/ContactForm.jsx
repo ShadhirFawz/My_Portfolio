@@ -535,6 +535,16 @@ const ContactForm = () => {
               <FaMapMarkerAlt className="w-5 h-7 text-center object-contain mr-3.5" />
               Kandy, Sri Lanka
             </motion.h3>
+            <motion.h3
+              className="text-cyan-100 text-center mt-2 mb-3 flex items-center z-10"
+              style={{ fontFamily: "Poppins", fontSize: 15 }}
+              variants={locationVariants}
+              initial="hidden"
+              animate={shouldReduceMotion ? { opacity: 1, y: 0 } : "visible"}
+            >
+              <FaEnvelope className="w-7 h-6 text-center object-contain mr-3.5" />
+              Shadhirfawz19@gmail.com
+            </motion.h3>
           </div>
         </motion.div>
       </div>

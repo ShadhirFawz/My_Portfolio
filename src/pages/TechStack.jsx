@@ -6,7 +6,7 @@ import Sidebar from "../components/Sidebar";
 import { ComplexNavbar } from "../components/Navbar";
 import ResumePDF from "../Shadhir_Resume.pdf";
 import AnimatedCloseButton from "../components/AnimatedCloseButoon";
-import { FaLaptopCode } from "react-icons/fa";
+import { FaLaptopCode, FaBook, FaGraduationCap } from "react-icons/fa";
 
 // Tech stack icons from TechStackScroll.jsx
 const techStack = [
@@ -48,7 +48,7 @@ const tools = ["GitHub", "Android Studio", "VS Code", "Postman", "Git", "Eclipse
 const AnimatedRedSquare = () => {
   return (
     <motion.div
-      className="absolute top-[19.2%] left-0 w-4 h-4 bg-gray-500/85 rounded-sm z-10"
+      className="absolute top-[12%] left-0 w-4 h-4 bg-gray-500/85 rounded-sm z-20"
       initial={{ x: '-100%' }}
       animate={{ x: '100vw' }}
       transition={{
@@ -87,6 +87,84 @@ const TechStack = () => {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
+  useEffect(() => {
+    const section = document.querySelector('.education-experience-section');
+    const observerOptions = {
+      threshold: 0.3
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        } else {
+          entry.target.classList.remove('visible');
+        }
+      });
+    }, observerOptions);
+
+    if (section) {
+      observer.observe(section);
+    } else {
+      console.error('Education & Experience section not found!');
+    }
+
+    return () => {
+      if (section) {
+        observer.unobserve(section);
+      }
+    };
+  }, []);
+
+    useEffect(() => {
+    const cards = document.querySelectorAll('.education-card');
+    const observerOptions = {
+      threshold: 0.3
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('slide-in');
+          entry.target.classList.remove('slide-out');
+        } else {
+          entry.target.classList.add('slide-out');
+          entry.target.classList.remove('slide-in');
+        }
+      });
+    }, observerOptions);
+
+    cards.forEach(card => {
+      observer.observe(card);
+    });
+
+    return () => {
+      cards.forEach(card => {
+        observer.unobserve(card);
+      });
+    };
+  }, []);
+
+  useEffect(() => {
+    const html = document.documentElement;
+    const body = document.body;
+    
+    // Store original styles
+    const originalHtmlOverflow = html.style.overflow;
+    const originalBodyOverflow = body.style.overflow;
+    
+    // Enable scrolling
+    html.style.overflow = 'auto';
+    body.style.overflow = 'auto';
+    
+    return () => {
+      // Restore original styles
+      html.style.overflow = originalHtmlOverflow;
+      body.style.overflow = originalBodyOverflow;
+    };
+  }, []);
+
+
   const toggleReadMore = () => setIsExpanded(!isExpanded);
   const toggleAccordion = (section) => {
     setOpenAccordion(openAccordion === section ? null : section);
@@ -116,18 +194,19 @@ const TechStack = () => {
   }
 
   return (
-     <div className="fixed inset-0 overflow-y-auto">
-      <div className="flex flex-col items-center justify-center w-full min-h-screen fixed inset-0 bg-gradient-to-l from-purple-900/90 via-black to-blue-900/80"
-           style={{
-            background: `
-              radial-gradient(circle at 20% 20%, rgba(75, 0, 130, 0.4), rgba(0, 0, 0, 0.8)),
-              radial-gradient(circle at 80% 50%, rgba(0, 191, 255, 0.3), rgba(0, 0, 0, 0.8)),
-              radial-gradient(circle at 30% 80%, rgba(138, 43, 226, 0.3), rgba(0, 0, 0, 0.8)),
-              linear-gradient(to left, rgba(75, 0, 130, 0.9), rgba(0, 0, 0, 1), rgba(0, 71, 171, 0.8))
-            `,
-          }}
+    <div className="min-h-screen flex flex-col">
+      <div
+        className="relative w-full flex-1 overflow-y-auto scroll-smooth bg-gradient-to-l from-purple-900/90 via-black to-blue-900/80"
+        style={{
+          background: `
+            radial-gradient(circle at 20% 20%, rgba(75, 0, 130, 0.4), rgba(0, 0, 0, 0.8)),
+            radial-gradient(circle at 80% 50%, rgba(0, 191, 255, 0.3), rgba(0, 0, 0, 0.8)),
+            radial-gradient(circle at 30% 80%, rgba(138, 43, 226, 0.3), rgba(0, 0, 0, 0.8)),
+            linear-gradient(to left, rgba(75, 0, 130, 0.9), rgba(0, 0, 0, 1), rgba(0, 71, 171, 0.8))
+          `,
+          minHeight: '150vh'
+        }}
       >
-        {/* Radial Gradient Background Effect */}
         <motion.div
           className="absolute inset-0 pointer-events-none"
           transition={{ duration: 0.3 }}
@@ -142,17 +221,13 @@ const TechStack = () => {
           />
         </div>
 
-        {/* White Horizontal Lines at 2/3 position */}
-        <div className="absolute top-[17%] w-full h-1 z-0 opacity-50">
-          {/* First white line */}
+        <div className="absolute top-[10%] w-full h-1 z-0 opacity-50">
           <motion.div 
             className="w-full h-px bg-white"
             initial={{ opacity: 0, scaleX: 0 }}
             animate={{ opacity: 1, scaleX: 1 }}
             transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
           />
-          
-          {/* Second white line with offset */}
           <motion.div 
             className="w-full mt-1 h-px bg-white"
             initial={{ opacity: 0, scaleX: 0 }}
@@ -163,12 +238,10 @@ const TechStack = () => {
 
         <AnimatedRedSquare />
 
-        {/* Navbar Placeholder */}
         <div className="fixed top-10 left-55 w-full h-[80px] bg-transparent z-80">
           <ComplexNavbar />
         </div>
 
-        {/* Resume Popup */}
         {isResumeOpen && (
           <motion.div
             className="fixed inset-0 bg-black/50 flex items-center justify-center z-[100] p-4"
@@ -198,10 +271,9 @@ const TechStack = () => {
           </motion.div>
         )}
 
-        <section className="relative w-full max-w-screen-6xl px-6 md:px-32 py-5 mt-24">
+        <section className="relative w-full max-w-screen-6xl px-6 md:px-32 py-5 mt-28">
           <div className="mx-auto py-3 my-4">
             <div className="flex flex-col md:flex-row gap-8">
-              {/* Left Column: About Me */}
               <div className="w-full md:w-1/2 pt-8">
                 <div className="flex items-center gap-4">
                   <motion.h1
@@ -232,7 +304,7 @@ const TechStack = () => {
                     transition={{ duration: 0.8, delay: 0.2 }}
                   >
                     I'm Shadhir Fawz, I've finished my schooling at St.Sylvester's College Kandy. Being as a Senior Prefect, bought 
-                    me good leadership qualities and Teamwork. Completing my Advanced level, I've started my Bachealors higher studies 
+                    me good leadership qualities and Teamwork. Completing my Advanced level, I've started my Bachelors higher studies 
                     at SLIIT in Software Engineering. I embarked on my journey to enhance my technical skills three years ago, dedicating myself 
                     to continuous learning and development.
                     <span className={isExpanded ? "hidden" : "inline"}> . . . </span>
@@ -327,7 +399,6 @@ const TechStack = () => {
                 </div>
               </div>
 
-              {/* Right Column: Accordion */}
               <div className="w-full md:w-1/2 mt-10 md:mt-0 pt-8 z-60">
                 {[
                   { title: "Languages", items: languages },
@@ -400,7 +471,6 @@ const TechStack = () => {
                     </motion.div>
                   </div>
                 ))}
-                {/* View My Work Button */}
                 <div className="flex items-center space-x-3 mt-6">
                   <Link to="/projects" className="text-white no-underline">
                     <motion.button
@@ -409,9 +479,7 @@ const TechStack = () => {
                       whileTap={{ scale: 0.95 }}
                       style={{ fontFamily: "sans-serif", zIndex: 90 }}
                     >
-                      
-                        <span className="relative z-20">View My Work</span>
-                      
+                      <span className="relative z-20">View My Work</span>
                     </motion.button>
                   </Link>
                   <FaLaptopCode className="w-9 h-9 text-gray-400 hover:text-blue-400 transition-colors" />
@@ -420,6 +488,87 @@ const TechStack = () => {
             </div>
           </div>
         </section>
+
+        <section className="education-experience-section relative w-full max-w-screen-6xl px-6 md:px-32 py-5 my-5">
+          <div className="mx-auto">
+            <motion.div
+              className="flex flex-col md:flex-row gap-8 items-center"
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              <div className="w-full md:w-1/2">
+                <motion.h2
+                  className="text-4xl md:text-5xl font-bold text-white mb-4"
+                  style={{ fontFamily: "'Times New Roman', Times, serif" }}
+                  initial={{ opacity: 0, x: -50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8, delay: 0.4 }}
+                >
+                  Education & Experience
+                </motion.h2>
+                <motion.div
+                  className="flex mb-3 pl-4 pr-0 py-2 bg-gray-800 rounded-lg shadow-lg"
+                  variants={{
+                    'slide-in': { x: 0, opacity: 1 },
+                    'slide-out': { x: -100, opacity: 0 }
+                  }}
+                  initial="slide-out"
+                  animate="slide-in"
+                  transition={{ duration: 0.5, ease: "easeOut" }}
+                >
+                  <FaBook className="w-10 h-10 my-4 mr-6 text-gray-300" />
+                  <div>
+                    <h4 className="font-bold text-white text-xl">Education</h4>
+                    <p
+                      className="font-bold text-gray-300"
+                      style={{ marginLeft: "20px", fontFamily: "Arial, Helvetica, sans-serif" }}
+                    >
+                      &#x2022; Advanced Level - Physical Science Stream<br />
+                      &#x203A; St.Sylvester's College Kandy
+                    </p>
+                  </div>
+                  <span className="relative top-2 right-0 text-gray-400 text-sm font-semibold" style={{ fontFamily: "Arial, Helvetica, sans-serif" }}>
+                    2018 - 2020
+                  </span>
+                </motion.div>
+                <motion.div
+                  className="flex mb-3 pl-4 pr-0 py-2 bg-gray-800 rounded-lg shadow-lg"
+                  variants={{
+                    'slide-in': { x: 0, opacity: 1 },
+                    'slide-out': { x: -100, opacity: 0 }
+                  }}
+                  initial="slide-out"
+                  animate="slide-in"
+                  transition={{ duration: 0.5, ease: "easeOut", delay: 0.2 }}
+                >
+                  <FaGraduationCap className="w-12 h-12 my-4 mr-4 text-gray-300" />
+                  <div>
+                    <h4 className="font-bold text-white text-xl">Higher Education</h4>
+                    <p
+                      className="font-bold text-gray-300"
+                      style={{ marginLeft: "20px", fontFamily: "Arial, Helvetica, sans-serif" }}
+                    >
+                      &#x2022; BSc (Hons) Software Engineering<br />
+                      &#x203A; SLIIT (Sri Lanka Institute of Information Technology)
+                    </p>
+                  </div>
+                </motion.div>
+              </div>
+              <div className="w-full md:w-1/2">
+                <motion.img
+                  src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80"
+                  className="w-full rounded-[15px] shadow-lg"
+                  alt="Education Background"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.8, delay: 1 }}
+                />
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
         <Sidebar />
       </div>
     </div>
