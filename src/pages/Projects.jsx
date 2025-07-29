@@ -7,6 +7,7 @@ import SaloonImg from '../assets/images/SaloonImg.png';
 import PharmacyImg from '../assets/images/PharmacyImg.png';
 import EcosphereImg from '../assets/images/ecosphere1.png';
 import Sidebar from "../components/Sidebar";
+import { FaExternalLinkAlt } from "react-icons/fa";
 
 const Projects = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -37,7 +38,8 @@ const Projects = () => {
         { name: "HTML", icon: "https://www.vectorlogo.zone/logos/w3_html5/w3_html5-icon.svg", link: "https://developer.mozilla.org/en-US/docs/Web/HTML" }
       ],
       image: EcosphereImg,
-      projectLink: "https://github.com/ShadhirFawz/EcoSphere_App"
+      projectLink: "https://github.com/ShadhirFawz/EcoSphere_App",
+      liveLink: ""
     },
     {
       id: 1,
@@ -52,7 +54,8 @@ const Projects = () => {
         { name: "MySQL", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original-wordmark.svg", link: "https://www.mysql.com/" }
       ],
       image: SaloonImg,
-      projectLink: "https://github.com/ShadhirFawz/Beauty-Saloon"
+      projectLink: "https://github.com/ShadhirFawz/Beauty-Saloon",
+      liveLink: ""
     },
     {
       id: 2,
@@ -68,7 +71,8 @@ const Projects = () => {
         { name: "Express.js", icon: "https://raw.githubusercontent.com/tandpfun/skill-icons/main/icons/ExpressJS-Dark.svg", link: "https://expressjs.com/" }
       ],
       image: PharmacyImg,
-      projectLink: "https://github.com/ShadhirFawz/Pharmacy-management-MERN"
+      projectLink: "https://github.com/ShadhirFawz/Pharmacy-management-MERN",
+      liveLink: ""
     },
     {
       id: 3,
@@ -83,7 +87,8 @@ const Projects = () => {
         { name: "HTML", icon: "https://www.vectorlogo.zone/logos/w3_html5/w3_html5-icon.svg", link: "https://developer.mozilla.org/en-US/docs/Web/HTML" }
       ],
       image: FuilioImg,
-      projectLink: "https://github.com/ShadhirFawz/Fuilio_App/tree/master"
+      projectLink: "https://github.com/ShadhirFawz/Fuilio_App/tree/master",
+      liveLink: ""
     },
     {
       id: 4,
@@ -99,7 +104,8 @@ const Projects = () => {
         { name: "MongoDB", icon: "https://raw.githubusercontent.com/tandpfun/skill-icons/main/icons/MongoDB.svg", link: "https://www.mongodb.com/" }
       ],
       image: CSpace,
-      projectLink: "https://github.com/ShadhirFawz/REST-Countries"
+      projectLink: "https://github.com/ShadhirFawz/REST-Countries",
+      liveLink: "https://rest-countries-pearl-five.vercel.app/"
     }
   ];
 
@@ -351,13 +357,25 @@ const Projects = () => {
                 </div>
               </div>
               
-              <button 
-                onClick={() => window.open(projects[activeIndex].projectLink, '_blank')}
-                className="scroll-mt-20 scroll-mb-4 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-5 rounded-lg transition-all duration-300 self-start text-sm"
-                style={{fontFamily: "revert"}}
-              >
-                See Project
-              </button>
+              <div className="flex gap-3">
+                <button 
+                  onClick={() => window.open(projects[activeIndex].projectLink, '_blank')}
+                  className="scroll-mt-20 scroll-mb-4 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-5 rounded-lg transition-all duration-300 self-start text-sm"
+                  style={{fontFamily: "revert"}}
+                >
+                  See Project
+                </button>
+                {projects[activeIndex].liveLink && (
+                  <span 
+                    onClick={() => window.open(projects[activeIndex].liveLink, '_blank')}
+                    className="scroll-mt-20 scroll-mb-4 text-white bg-blue-800 hover:bg-blue-700 font-medium py-2.5 px-4 rounded-lg transition-all duration-300 self-start text-sm flex items-center gap-2 cursor-pointer"
+                    style={{fontFamily: "revert"}}
+                  >
+                    <span>Live</span>
+                    <FaExternalLinkAlt className="w-3 h-3" />
+                  </span>
+                )}
+              </div>
             </div>
           </motion.div>
         </div>
