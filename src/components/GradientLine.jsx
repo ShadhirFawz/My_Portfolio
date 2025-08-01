@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-const GradientUnderline = () => {
+const GradientUnderline = ({isMobile}) => {
   const gradientRef = useRef(null);
   const startTime = useRef(null);
   const duration = 600; // seconds (10 minutes per cycle)
@@ -23,7 +23,7 @@ const GradientUnderline = () => {
   }, []);
 
   return (
-    <div className="relative mt-[-30px] h-2 w-full max-w-[250px] md:max-w-[350px] rounded-full overflow-hidden brightness-85">
+    <div className={`relative mt-[-30px] h-2 ${isMobile ? 'w-auto' : 'w-full'}  max-w-[50px] md:max-w-auto rounded-full overflow-hidden brightness-85`}>
       <div 
         ref={gradientRef}
         className="absolute inset-0 w-full h-full"

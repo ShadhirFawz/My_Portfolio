@@ -101,7 +101,7 @@ const LandingPage = () => {
   const handleClick = (e, index, link) => {
     e.preventDefault(); // Prevent instant navigation
     setClickedIndex(index); // Mark the clicked link
-
+    setIsDrawerOpen(false); // Close drawer on link click
     setTimeout(() => {
       navigate(`/${link.toLowerCase()}`);
       setClickedIndex(null); // Reset after navigation
@@ -109,9 +109,9 @@ const LandingPage = () => {
   };
 
   return (
-    <div className="fixed inset-0 overflow-y-auto">
+    <div className="fixed inset-0 overflow-auto" ref={pageRef}>
       <div
-        className={`relative flex flex-col items-center justify-center w-full min-h-screen bg-gradient-to-l from-purple-900/90 via-black to-blue-900/80 p-6 pt-[100px] 
+        className={`relative flex flex-col items-center justify-center w-full min-h-screen bg-gradient-to-l from-purple-900/90 via-black to-blue-900/80 ${isMobile ? 'p-4' : 'p-6'}  pt-[80px] 
           ${isDrawerOpen ? "pointer-events-none" : ""}`}
         style={{
           background: `
@@ -124,32 +124,32 @@ const LandingPage = () => {
       >
         <Sidebar />
         {/* Navbar & Drawer */}
-        <nav className="fixed top-0 left-0 w-full flex justify-between items-center p-6 bg-transparent bg-opacity-90 backdrop-blur-md max-w-screen-2xl mx-auto z-50">
+        <nav className={`fixed top-0 left-0 right-0 w-full flex justify-between items-center ${isMobile ? 'p-[8px]' : 'pt-6 pl-6'} bg-transparent bg-opacity-90 backdrop-blur-md max-w-auto z-150`}>
           <div className="relative flex items-center">
             <div className="relative overflow-hidden">
               <h1
-                className="text-white text-2xl font-bold font-serif cursor-auto relative mt-2 md:mt-0"
+                className={`text-white ${isMobile ? 'text-sm' : 'text-2xl'} font-bold font-serif cursor-auto relative mt-2 md:mt-0`}
                 onMouseEnter={() => setHovered(true)}
                 onMouseLeave={() => setHovered(false)}
-                style={{ fontFamily: "cursive" }}
+                style={{ fontFamily: "'Palatino Linotype', 'Book Antiqua', serif", fontSize: isMobile ? "30px" : "50px", }}
               >
                 ShaDF
               </h1>
               <motion.div
-                className="absolute left-0 bottom-0 h-[2px] bg-blue-400"
+                className="relative left-0 bottom-0 h-[2px] bg-blue-400"
                 initial={{ width: 0 }}
                 animate={hovered && !shouldReduceMotion ? { width: "60px" } : { width: 0 }}
                 transition={{ duration: 1 }}
               />
             </div>
             <motion.span
-              className="text-blue-400 text-2xl font-bold ml-2 font-cursive overflow-hidden relative"
+              className={`text-blue-400 ${isMobile ? 'text-xl' : 'text-2xl'} pl-3 font-bold ml-0 font-cursive overflow-hidden relative`}
               initial={{ width: 0 }}
               animate={hovered && !shouldReduceMotion ? { width: "auto" } : { width: 0 }}
               transition={{ duration: 1, delay: 0.2 }}
               style={{
                 fontFamily: "serif",
-                fontSize: 25,
+                fontSize: isMobile ? 20 : 25,
                 whiteSpace: "nowrap",
                 display: "inline-block",
               }}
@@ -158,77 +158,84 @@ const LandingPage = () => {
             </motion.span>
           </div>
           {isMobile ? (
-            <button
+            <span
               onClick={() => setIsDrawerOpen(!isDrawerOpen)}
-              className="text-white fixed z-[100] bg-gray-900 rounded-full shadow-lg pointer-events-auto" // ⬅️ `z-[100]` ensures it's above everything
+              className="text-white fixed z-[150] rounded-lg shadow-lg pointer-events-auto"
               style={{
-                top: "5%",
-                right: Math.min(window.innerWidth * 0.05, 20) + "px",
-                width: Math.max(window.innerWidth * 0.1, 55) + "px",
-                height: Math.max(window.innerWidth * 0.1, 55) + "px",
+                top: "12%",
+                right: "50px",
+                width: Math.max(window.innerWidth * 0.1, 40) + "px",
+                height: Math.max(window.innerWidth * 0.1, 40) + "px",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
               }}
             >
-              {isDrawerOpen ? <XMarkIcon className="w-12 h-12" /> : <Bars3Icon className="w-12 h-12" />}
-            </button>
+              {isDrawerOpen ? <XMarkIcon className="w-8 h-8" /> : <Bars3Icon className="w-6 h-6" />}
+            </span>
           ) : (
             <ComplexNavbar />
           )}
         </nav>
 
         {/* Mobile Drawer with Navigation Links */}
-        {isMobile && isDrawerOpen && (
+        {isMobile && (
           <motion.div
-            initial={{ x: -150 }}
-            animate={shouldReduceMotion ? { x: 0 } : { x: 0 }}
-            exit={{ x: -50 }}
-            className="absolute top-0 left-0 w-2/4 h-screen bg-black bg-opacity-90 p-6 flex flex-col items-start z-40 space-y-4 pointer-events-auto"
+            className={`fixed inset-0 z-[149] pointer-events-auto ${isDrawerOpen ? "block" : "hidden"}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: isDrawerOpen ? 1 : 0 }}
+            transition={{ duration: 0.3 }}
+            onClick={() => setIsDrawerOpen(false)}
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-800 via-transparent to-transparent opacity-50 rounded-full w-[700px] h-[600px] -top-10 -left-36"></div>
+            <motion.div
+              initial={{ x: "-100%" }}
+              animate={{ x: isDrawerOpen ? 0 : "-100%" }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="absolute top-0 left-0 w-3/5 h-screen bg-black bg-opacity-90 p-1 flex flex-col items-start z-[150] space-y-4"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-800 via-transparent to-transparent opacity-50 rounded-full w-[700px] h-[600px] -top-10 -left-36"></div>
 
-            {/* Nav Links */}
-            <div className="flex flex-col space-y-6 mt-25">
-              {["Portfolio", "Projects", "Contact"].map((text, index) => (
-                <Link
-                  key={index}
-                  to={`/${text.toLowerCase()}`}
-                  className="relative text-gray-300 text-lg font-semibold font-serif py-2 px-8 w-full rounded-lg transition-all duration-300 hover:text-blue-400 hover:scale-105 overflow-visible block z-1"
-                  onClick={(e) => handleClick(e, index, text)}
-                >
-                  <motion.div
-                    className="absolute left-0 top-0 h-full bg-blue-500 opacity-20 border rounded-l-xl"
-                    initial={{ width: "0%" }}
-                    animate={clickedIndex === index && !shouldReduceMotion ? { width: "100%" } : {}}
-                    transition={{ duration: 0.5, ease: "easeInOut" }}
-                  />
-                  <span className="relative z-10 text-amber-50 font-serif">{text}</span>
-                </Link>
-              ))}
-            </div>
+              {/* Nav Links */}
+              <div className="flex flex-col space-y-6 mt-25">
+                {["Tech", "Projects", "Contact"].map((text, index) => (
+                  <Link
+                    key={index}
+                    to={`/${text.toLowerCase()}`}
+                    className="relative text-gray-300 text-lg font-semibold font-serif py-2 px-8 w-full rounded-lg transition-all duration-300 hover:text-blue-400 hover:scale-105 overflow-visible block z-1"
+                    onClick={(e) => handleClick(e, index, text)}
+                  >
+                    <motion.div
+                      className="absolute left-0 top-0 h-full bg-blue-500 opacity-20 border rounded-l-xl"
+                      initial={{ width: "0%" }}
+                      animate={clickedIndex === index && !shouldReduceMotion ? { width: "100%" } : {}}
+                      transition={{ duration: 0.5, ease: "easeInOut" }}
+                    />
+                    <span className="relative z-10 text-amber-50 font-serif">{text}</span>
+                  </Link>
+                ))}
+              </div>
 
-            {/* Social Links */}
-            <div className="flex justify-center w-full mt-auto space-x-6 pb-6">
-              <a href="https://www.linkedin.com/in/shadhir-fawz-30739730a/" target="_blank" rel="noopener noreferrer" className="bg-gray-800 text-white p-2 rounded-lg text-3xl transition-all duration-300 hover:bg-emerald-950">
-                <FaLinkedin />
-              </a>
-              <a href="mailto:ShadhirFawz19@gmail.com" className="bg-gray-800 text-white p-2 rounded-lg text-3xl transition-all duration-300 hover:bg-emerald-950">
-                <FaEnvelope />
-              </a>
-              <a href="https://github.com/ShadhirFawz" target="_blank" rel="noopener noreferrer" className="bg-gray-800 text-white p-2 rounded-lg text-3xl transition-all duration-300 hover:bg-emerald-950">
-                <FaGithub />
-              </a>
-            </div>
+              {/* Social Links */}
+              <div className="flex justify-center w-full mt-auto space-x-6 pb-6">
+                <a href="https://www.linkedin.com/in/shadhir-fawz-30739730a/" target="_blank" rel="noopener noreferrer" className="bg-gray-800 text-white p-2 rounded-lg text-3xl transition-all duration-300 hover:bg-emerald-950">
+                  <FaLinkedin />
+                </a>
+                <a href="mailto:ShadhirFawz19@gmail.com" className="bg-gray-800 text-white p-2 rounded-lg text-3xl transition-all duration-300 hover:bg-emerald-950">
+                  <FaEnvelope />
+                </a>
+                <a href="https://github.com/ShadhirFawz" target="_blank" rel="noopener noreferrer" className="bg-gray-800 text-white p-2 rounded-lg text-3xl transition-all duration-300 hover:bg-emerald-950">
+                  <FaGithub />
+                </a>
+              </div>
+            </motion.div>
           </motion.div>
         )}
-          <FloatingCodeSnippets />
-          <TechStackScroll pageHeight={pageHeight} />
+
+        <FloatingCodeSnippets />
+        {!isMobile && <TechStackScroll pageHeight={pageHeight} isMobile={isMobile} />}
+
         {/* Background effect */}
-        <motion.div
-          className="absolute inset-0 pointer-events-none"
-          transition={{ duration: 0.3 }}
-        />
         <motion.svg
           className="absolute inset-0 pointer-events-none"
           style={{ width: '100%', height: '100%' }}
@@ -260,40 +267,40 @@ const LandingPage = () => {
             fill="rgba(0, 150, 255, 0.8)"
           />
         </motion.svg>
-        
+
         {/* Content Container */}
         <div
-          className="relative z-10 flex flex-col md:flex-row items-center justify-center w-full max-w-screen-6xl px-6 md:px-32 text-center md:text-left min-h-[80vh] md:min-h-[70vh]"
+          className={`relative z-10 flex flex-col ${isMobile ? 'justify-between' : 'md:flex-row items-center justify-center'} w-full max-w-screen-6xl px-6 ${isMobile ? 'pt-4' : 'md:px-32'} text-center ${isMobile ? '' : 'md:text-left'} min-h-[80vh] ${isMobile ? '' : 'md:min-h-[70vh]'}`}
         >
           <style>{`.max-h-96::-webkit-scrollbar { display: none; }`}</style>
-          <div className="w-full md:w-1/2 space-y-10 flex flex-col items-center md:items-start">
+          <div className={`w-full ${isMobile ? 'w-fit' : 'md:w-1/2'} space-y-10 flex flex-col items-center ${isMobile ? '' : 'md:items-start'}`}>
             <motion.h1
-              className="text-2xl md:text-5xl font-extrabold text-gray-100"
+              className={`${isMobile ? 'text-2xl' : 'text-3xl md:text-5xl'} font-extrabold text-gray-100 `}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              style={{ fontFamily: "serif" }}
+              style={{ fontFamily: "serif", fontSize: isMobile ? 38 : 48 }}
             >
               Hello, I'm <GlitchText text="Shadhir" className="text-blue-400 inline" />
             </motion.h1>
 
             {/* Lines Below Hello */}
-            <div className="flex flex-col space-y-2 w-auto items-start">
+            <div className={`flex flex-col space-y-2 w-auto items-${isMobile ? 'center' : 'start'}`}>
               <div>
-                <AnimatedTitle />
+                <AnimatedTitle isMobile={isMobile} />
               </div>
-              <AnimatedSquares />
+              <AnimatedSquares isMobile={isMobile} />
             </div>
 
             {/* Animated Infinite Gradient Underline */}
             <motion.div
-              className="relative mt-[-30px] h-2 w-full max-w-[250px] md:max-w-[350px] rounded-full overflow-hidden brightness-85"
+              className={`relative mt-[-30px] h-2 w-full max-w-${isMobile ? '[200px]' : '[250px] md:max-w-[350px]'} rounded-full overflow-hidden brightness-85`}
             >
               <motion.div
                 className="absolute inset-0 w-full h-full"
                 style={{
                   background: "linear-gradient(90deg, #EE696B, #C35D8A, #90559F, #6C4C99, #523A78, #EE696B)",
-                  backgroundSize: "1000% 100%", // Much longer gradient for ultra-smoothness
+                  backgroundSize: "1000% 100%",
                 }}
                 animate={
                   shouldReduceMotion
@@ -302,14 +309,14 @@ const LandingPage = () => {
                 }
                 transition={{ 
                   repeat: Infinity,
-                  duration: 80, // Slower movement (30 seconds per loop)
+                  duration: 80,
                   ease: "linear",
                 }}
               />
             </motion.div>
 
             <motion.p
-              className="text-lg text-gray-300 font-light leading-relaxed px-4 md:px-0"
+              className={`text-${isMobile ? 'sm' : 'lg'} text-gray-300 font-light leading-relaxed px-${isMobile ? '1' : '4 md:px-0'}`}
               initial={{ opacity: 0 }}
               animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1 }}
               transition={{ duration: 1, delay: 0.3 }}
@@ -320,8 +327,7 @@ const LandingPage = () => {
             </motion.p>
 
             {/* Call to Action & Social Icons */}
-            
-            <div className="flex flex-col items-center md:flex-row space-y-6 md:space-y-0 md:space-x-12">
+            <div className={`flex flex-col items-center ${isMobile ? '' : 'md:flex-row md:space-y-0 md:space-x-12'} space-y-6`}>
               {/* Let's Connect Button */}
               <motion.div
                 className="relative flex items-center w-fit"
@@ -331,16 +337,16 @@ const LandingPage = () => {
                 onTouchEnd={() => setShowMessage(false)}
               >
                 <motion.button
-                  className="relative z-10 px-8 py-4 text-lg font-medium bg-blue-600 rounded-lg shadow-md border border-blue-50 text-gray-100 transition-all duration-300 flex items-center"
+                  className={`relative z-10 px-${isMobile ? '6' : '8'} py-${isMobile ? '3' : '4'} text-${isMobile ? 'base' : 'lg'} font-medium bg-blue-600 rounded-lg shadow-md border border-blue-50 text-gray-100 transition-all duration-300 flex items-center`}
                   animate={showMessage && !shouldReduceMotion ? { 
                     x: -40,
-                    borderColor: "transparent" // Border disappears when animated
+                    borderColor: "transparent"
                   } : { 
                     x: 0,
-                    borderColor: "#ffffff" // White border in initial state
+                    borderColor: "#ffffff"
                   }}
                   transition={{ duration: 0.3 }}
-                  style={{fontFamily: "sans-serif"}}
+                  style={{ fontFamily: "sans-serif" }}
                   initial={{ borderColor: "#ffffff" }}
                 >
                   Let's Connect
@@ -348,7 +354,7 @@ const LandingPage = () => {
 
                 <Link to="/contact" className="absolute left-full ml-[-40px]">
                   <motion.button
-                    className="flex items-center justify-center w-11 h-11 text-blue-600 rounded-t-md rounded-e-none rounded-b-md shadow-lg flex-none"
+                    className={`flex items-center justify-center w-${isMobile ? '10' : '10'} h-${isMobile ? '10' : '11.8'} text-blue-600 rounded-t-md rounded-e-none rounded-b-md shadow-lg flex-none`}
                     initial={{ opacity: 0, x: -40 }}
                     animate={
                       showMessage && !shouldReduceMotion
@@ -359,13 +365,13 @@ const LandingPage = () => {
                     style={{ backgroundColor: "#262626" }}
                     onClick={() => navigate("/contact")}
                   >
-                    <FaEnvelope className="text-white w-5 h-5 flex-none" />
+                    <FaEnvelope className={`text-white w-${isMobile ? '4' : '5'} h-${isMobile ? '4' : '5'} flex-none`} />
                   </motion.button>
                 </Link>
               </motion.div>
 
               {/* Social Icons */}
-              <div className="flex space-x-8 mb-6 md:mb-0">
+              <div className={`flex space-x-${isMobile ? '6' : '8'} mb-${isMobile ? '6' : '6 md:mb-0'} ${isMobile ? 'mt-5' : ''}`}>
                 {/* LinkedIn */}
                 <motion.a
                   href="https://www.linkedin.com/in/shadhir-fawz-30739730a/"
@@ -383,7 +389,7 @@ const LandingPage = () => {
                   }
                 >
                   <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-10 h-2 rounded-full bg-black opacity-20 blur-sm" />
-                  <img src={LinkedIn} className="relative z-10 w-12 cursor-pointer" />
+                  <img src={LinkedIn} className={`relative z-10 w-${isMobile ? '10' : '12'} cursor-pointer`} />
                 </motion.a>
 
                 {/* Gmail */}
@@ -401,7 +407,7 @@ const LandingPage = () => {
                   }
                 >
                   <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-10 h-2 rounded-full bg-black opacity-20 blur-sm" />
-                  <img src={Gmail} className="relative z-10 w-12 cursor-pointer" />
+                  <img src={Gmail} className={`relative z-10 w-${isMobile ? '10' : '12'} cursor-pointer`} />
                 </motion.a>
 
                 {/* GitHub */}
@@ -421,21 +427,21 @@ const LandingPage = () => {
                   }
                 >
                   <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-10 h-2 rounded-full bg-black opacity-20 blur-sm" />
-                  <img src={Github} className="relative z-10 w-12 cursor-pointer" />
+                  <img src={Github} className={`relative z-10 w-${isMobile ? '10' : '12'} cursor-pointer`} />
                 </motion.a>
               </div>
             </div>
           </div>
 
           <motion.div 
-            className="w-3/4 h-full md:w-1/2 flex justify-center mt-70 md:mt-0 overflow-visible"
-            initial={{ x: "100%", opacity: 0 }}
+            className={`w-${isMobile ? 'auto' : '3/4'} h-full ${isMobile ? 'mt-10' : 'md:w-1/2 mt-70 md:mt-0'} flex justify-center overflow-visible`}
+            initial={{ x: isMobile ? 0 : "100%", opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ 
               type: "spring",
               stiffness: 50,
               damping: 10,
-              delay: 0.5 // Optional delay to coordinate with other animations
+              delay: isMobile ? 0.2 : 0.5
             }}
           >
             <RotatingCard />
@@ -443,7 +449,6 @@ const LandingPage = () => {
         </div>
       </div>
     </div>
-    
   );
 };
 

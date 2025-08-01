@@ -23,10 +23,9 @@ const SymbolSlot = ({ targetSymbol, symbols, isMobile }) => {
           i++;
         } else {
           clearInterval(interval);
-          // Restart cycle after a pause
-          setTimeout(startCycle, 2000); // Adjust loop delay (ms)
+          setTimeout(startCycle, 2000);
         }
-      }, 100); // Speed of symbol roll
+      }, 100);
     };
 
     startCycle();
@@ -39,7 +38,7 @@ const SymbolSlot = ({ targetSymbol, symbols, isMobile }) => {
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.1 }}
-      className={`inline-block font-mono text-white ${isMobile ? 'text-xl' : 'text-3xl'}`}
+      className={`inline-block font-mono text-white ${isMobile ? 'text-lg' : 'text-3xl'}`}
     >
       {symbols[currentIndex]}
     </motion.span>
@@ -52,7 +51,7 @@ const AnimatedTitle = ({ isMobile }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowSymbols(true);
-    }, 3000); // Delay after main text (adjust as needed)
+    }, 3000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -78,7 +77,7 @@ const AnimatedTitle = ({ isMobile }) => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1.2 }}
-              className={isMobile ? 'text-xl' : 'text-3xl'}
+              className={isMobile ? 'text-lg' : 'text-3xl'}
             >
               &lt;/&gt;
             </motion.span>

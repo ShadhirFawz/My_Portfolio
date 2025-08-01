@@ -94,10 +94,10 @@ const RotatingProfileCard = () => {
   );
 };
 
-const RotatingCard = () => {
+const RotatingCard = ({ isMobile }) => {
   return (
     <Link to='/tech'>
-      <div className="w-[400px] h-[560px] overflow-visible">
+      <div className={`${isMobile ? 'w-auto' : 'w-[400px]'}  h-[560px] overflow-hidden`}>
         <Canvas
           camera={{ position: [0, 0, 8], fov: 50 }}
           gl={{ antialias: true, preserveDrawingBuffer: true }}

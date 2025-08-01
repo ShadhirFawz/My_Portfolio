@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 import JetpackCompose from '../assets/images/jetpack-compose.png';
 
-// Tech stack icons (unchanged)
 const techStack = [
   { name: "Java", src: "https://raw.githubusercontent.com/tandpfun/skill-icons/main/icons/Java-Dark.svg" },
   { name: "JavaScript", src: "https://raw.githubusercontent.com/tandpfun/skill-icons/main/icons/JavaScript.svg" },
@@ -62,22 +61,22 @@ const technicalNames = {
   Figma: "Figma Design Tool",
 };
 
-const TechStackScroll = ({ pageHeight }) => {
+const TechStackScroll = ({ pageHeight, isMobile }) => {
   const containerRef = useRef(null);
   const iconRefs = useRef([]);
-  const itemHeight = 80; // Icon height (60px) + margin (20px)
+  const itemHeight = isMobile ? 60 : 80; // Smaller icons on mobile
+  const itemWidth = isMobile ? 60 : 80; // Width for horizontal scroll
 
-  // Calculate zoom based on icon's screen position
   const updateZoom = () => {
-    const centerY = pageHeight / 2; // Center of the page height
+    const center = isMobile ? window.innerWidth / 2 : pageHeight / 2;
     iconRefs.current.forEach((el, index) => {
       if (!el) return;
       const rect = el.getBoundingClientRect();
-      const itemY = rect.top + rect.height / 2; // Center of the icon
-      const distanceFromCenter = Math.abs(centerY - itemY);
-      const zoomRange = 150; // Range for gradual zoom
+      const itemPos = isMobile ? rect.left + rect.width / 2 : rect.top + rect.height / 2;
+      const distanceFromCenter = Math.abs(center - itemPos);
+      const zoomRange = isMobile ? 100 : 150;
       const scale = distanceFromCenter < zoomRange
-        ? 1 + (1 - distanceFromCenter / zoomRange) * 0.5 // Scale from 1 to 1.5
+        ? 1 + (1 - distanceFromCenter / zoomRange) * 0.5
         : 1;
       el.style.transform = `scale(${scale})`;
       el.style.transition = "transform 2s ease-in-out";
@@ -85,7 +84,6 @@ const TechStackScroll = ({ pageHeight }) => {
     requestAnimationFrame(updateZoom);
   };
 
-  // Start zoom animation
   useEffect(() => {
     let animationFrame;
     const startZoom = () => {
@@ -93,7 +91,7 @@ const TechStackScroll = ({ pageHeight }) => {
     };
     startZoom();
     return () => cancelAnimationFrame(animationFrame);
-  }, [pageHeight]);
+  }, [pageHeight, isMobile]);
 
   useEffect(() => {
     let animationFrame;
@@ -112,21 +110,21 @@ const TechStackScroll = ({ pageHeight }) => {
 
     container.addEventListener("mouseenter", handleMouseEnter);
     container.addEventListener("mouseleave", handleMouseLeave);
-    container.style.pointerEvents = "auto"; // Enable pointer events
+    container.style.pointerEvents = "auto";
 
     return () => {
       cancelAnimationFrame(animationFrame);
       container.removeEventListener("mouseenter", handleMouseEnter);
       container.removeEventListener("mouseleave", handleMouseLeave);
-      container.style.pointerEvents = "none"; // Reset
+      container.style.pointerEvents = "none";
     };
-  }, [pageHeight]);
+  }, [pageHeight, isMobile]);
 
   return (
     <div
       ref={containerRef}
-      className="absolute left-5 top-0 w-55 md:w-24 h-[calc(100vh-100px)] overflow-hidden pointer-events-none z-50"
-      style={{ marginTop: "100px" }}
+      className={`absolute ${isMobile ? 'bottom-0 left-0 w-full h-auto' : 'left-5 top-0 w-24 h-[calc(100vh-100px)]'} overflow-hidden pointer-events-none z-50`}
+      style={{ marginTop: isMobile ? 0 : "100px" }}
     >
       <style>
         {`
@@ -134,8 +132,12 @@ const TechStackScroll = ({ pageHeight }) => {
             0% { transform: translateY(0); }
             100% { transform: translateY(-${techStack.length * itemHeight}px); }
           }
+          @keyframes scrollLeft {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-${techStack.length * itemWidth}px); }
+          }
           .scroll-container {
-            animation: scrollUp ${techStack.length * 2}s linear infinite;
+            animation: ${isMobile ? `scrollLeft ${techStack.length * 2}s linear infinite` : `scrollUp ${techStack.length * 2}s linear infinite`};
             animation-play-state: running;
           }
           .scroll-container.paused {
@@ -145,19 +147,23 @@ const TechStackScroll = ({ pageHeight }) => {
       </style>
       <div
         className="scroll-container"
-        style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+        style={{ 
+          display: "flex", 
+          flexDirection: isMobile ? "row" : "column", 
+          alignItems: "center" 
+        }}
       >
         {[...techStack, ...techStack].map((tech, index) => (
           <div
             key={`${tech.name}-${index}`}
             ref={(el) => (iconRefs.current[index] = el)}
-            className="relative flex justify-center items-center my-4 group"
-            style={{ width: 60, height: 60 }}
+            className="relative flex justify-center items-center mx-2 my-4 group"
+            style={{ width: isMobile ? 48 : 60, height: isMobile ? 48 : 60 }}
           >
             <img
               src={tech.src}
               alt={tech.name}
-              className="w-12 h-12 object-contain transition-transform duration-300 group-hover:scale-120"
+              className={`w-${isMobile ? '8' : '12'} h-${isMobile ? '8' : '12'} object-contain transition-transform duration-300 group-hover:scale-120`}
               style={{
                 filter: "grayscale(100%)",
                 ...tech.style,
@@ -176,8 +182,8 @@ const TechStackScroll = ({ pageHeight }) => {
               }}
             />
             <span
-              className="absolute top-[-15px] hidden group-hover:block bg-gray-800 text-white text-xs font-mono px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap"
-              style={{ transform: "translateY(-10px)" }}
+              className={`absolute ${isMobile ? 'bottom-[-25px]' : 'top-[-15px]'} hidden group-hover:block bg-gray-800 text-white text-xs font-mono px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap`}
+              style={{ transform: isMobile ? "translateY(10px)" : "translateY(-10px)" }}
             >
               {technicalNames[tech.name] || tech.name}
             </span>
